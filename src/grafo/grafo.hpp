@@ -7,6 +7,9 @@
 #include <fstream>
 #include <string>
 
+/**
+ * @brief 
+ */
 struct no {
     int id;
     int peso;
@@ -14,9 +17,9 @@ struct no {
 
 class Grafo {
     private:
-        bool isOrientado;
-        int qnt_nos;
-        std::list<no> *grafo;
+        bool isOrientado; /// booleando que indica se o grafo é orientado
+        int qnt_nos; /// booleando que indica a quantidade de vertices do grafo
+        std::list<no> *grafo; /// vetor de listas de vertices
 
     public:
         Grafo();
