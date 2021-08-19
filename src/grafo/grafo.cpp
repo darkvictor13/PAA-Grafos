@@ -1,36 +1,29 @@
 #include "grafo.hpp"
 
 Grafo::Grafo() {
-    
+	std::cout << "Construindo um grafo" << std::endl;
 }
 
-void Grafo::ler() {
-	std::string line;
-    std::cout << "O grafo é ordenado: ";
-	std::cin >> line;
-	try {
-		this->isOrientado = 
-		(line.substr(line.find_first_of('='), line.size()) == "sim");
-	}
-	catch(const std::exception& e) {
-		std::cerr << e.what() << '\n';
-	}
-	this->isOrientado = true;
-	
+void Grafo::ler(std::string filename) {
+    std::ifstream file;
+    file.open(filename);
 
-    std::cout << "Quantidade de nós: ";
-	scanf("%d%*c", &qnt_nos);
+	std::string line;
+	getline(file, line);
+	isOrientado = (line.substr(line.find_first_of('=') + 1) == "sim");
+
+	getline(file, line);
+	qnt_nos = atoi((line.substr(line.find_first_of('=') + 1)).c_str());
 
 	this->grafo = new std::list<no> [qnt_nos];
 
-	while (getline(std::cin, line)) {
-		std::cout << "String de entrada [" << line << "]\n";
-		no temp;
-		temp.id = atoi(&line[line.find_first_of(',') + 1]);
+	no temp;
+	while (getline(file, line)) {
+		temp.id   = atoi(&line[line.find_first_of(',') + 1]);
 		temp.peso = atoi(&line[line.find_first_of(':') + 1]);
 		int index = atoi(&line[1]);
 		grafo[index].push_back(temp);
-		if (isOrientado) {
+		if (!isOrientado) {
 			std::swap(index, temp.id);
             grafo[index].push_back(temp);
         }
@@ -52,4 +45,5 @@ Grafo::~Grafo() {
 		grafo[i].clear();
 	}
 	delete []grafo;
+	std::cout << "Destruindo um grafo" << std::endl;
 }

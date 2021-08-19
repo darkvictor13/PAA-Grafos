@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <string>
 
 struct no {
@@ -19,9 +20,9 @@ class Grafo {
 
     public:
         Grafo();
-        void ler();
+        void ler(std::string filename);
         void show();
-        friend std::ifstream& operator >> (std::ifstream input, const Grafo &g);
+        friend std::ifstream& operator >> (std::ifstream &input, const Grafo &g);
         ~Grafo();
 };
 
