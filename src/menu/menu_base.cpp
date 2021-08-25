@@ -54,9 +54,9 @@ char MenuBase::getChar() {
 #endif //__gnu_linux__
 
 MenuReturn MenuBase::loop() {
-    char inputChar;
-    while(1) {
+    char input_char;
+    while(input_char != ESC) {
         system(CLEAR);
-        inputChar = getChar();
+        input_char = getChar();
     }
 }
