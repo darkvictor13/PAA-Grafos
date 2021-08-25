@@ -9,7 +9,7 @@ int main (int argc, char *argv[]) {
     //g.ler("input");
     g.ler();
     g.ordena();
-    g.buscaEmProfundidade(3);
+    g.buscaEmLargura(3);
     g.show();
     return 0;
 }

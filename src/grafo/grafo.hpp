@@ -10,6 +10,7 @@
 #define GRAFO
 
 #include <list>
+#include <queue>
 #include <limits>
 #include <algorithm>
 #include <vector>
@@ -17,12 +18,15 @@
 #include <string>
 
 #include "no_grafo.hpp"
+#include "../utils/debug.hpp"
 
 enum cor {
     BRANCO,
     CINZA,
     PRETO
 };
+
+#define NIL -1
 
 class Grafo {
     private:
@@ -32,11 +36,15 @@ class Grafo {
 
         cor *cores; /// vetor de cores, alocado somente quando tem busca em profundidade
         int *predecessores; /// vetor de predecessores, alocado somente quando tem busca em profundidade
+        int *dist;
         std::list<int> ordem; /// vetor que informa a ordem em que os vertices foram acessados,
                     /// alocado somente quando tem busca em profundidade
 
         void constroi(std::istream& in);
         void buscaEmProfundidadeVisit(int index);
+
+        void printOrdemAcesso();
+        void printPredecessores();
 
     public:
         Grafo();
@@ -47,7 +55,9 @@ class Grafo {
 
         void ordena();
 
+        //----- Algoritimos de um grafo -----//
         void buscaEmProfundidade(int vertice_inicio);
+        void buscaEmLargura(int vertice_inicio);
         ~Grafo();
 };
 

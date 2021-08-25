@@ -9,7 +9,7 @@
 #include "grafo.hpp"
 
 Grafo::Grafo() {
-	std::cout << "Construindo um grafo" << std::endl;
+	debug("Construindo um grafo\n");
 }
 
 void Grafo::constroi(std::istream& file) {
@@ -47,7 +47,7 @@ void Grafo::ler(std::string filename) {
 }
 
 void Grafo::ler() {
-	std::cout << "Informe os dados na mesma sintaxe do arquivo\n";
+	debug("Informe os dados na mesma sintaxe do arquivo\n");
 	constroi(std::cin);
 }
 
@@ -67,6 +67,29 @@ void Grafo::ordena() {
 	}
 }
 
+void Grafo::printOrdemAcesso() {
+	std::cout << "Ordem de acesso: ";
+	auto it = ordem.cbegin();
+	for (auto fim = std::prev(ordem.cend()); it != fim; it++) {
+        std::cout << *it << " - ";
+    }
+    std::cout << *it << '\n';
+}
+
+void Grafo::printPredecessores() {
+	int i;
+    std::cout << "Predecessores:   ";
+    for (i = 0; i < qnt_nos - 1; i++) {
+        if (predecessores[i] == NIL) {
+            std::cout << "NIL";
+        } else {
+            std::cout << predecessores[i];
+        }
+        std::cout << " - ";
+    }
+    std::cout << predecessores[i] << '\n';
+}
+
 void Grafo::buscaEmProfundidadeVisit(int index) {
 	std::cout << index << '\n';
 	ordem.push_back(index);
@@ -82,8 +105,7 @@ void Grafo::buscaEmProfundidadeVisit(int index) {
 
 void Grafo::buscaEmProfundidade(int vertice_inicio) {
 	int i;
-	//int nil = std::numeric_limits<int>::max();
-	int nil = -1;
+	//int NIL = std::numeric_limits<int>::max();
 
 	predecessores = new(std::nothrow) int[qnt_nos];
 	cores         = new(std::nothrow) cor[qnt_nos];
@@ -91,7 +113,7 @@ void Grafo::buscaEmProfundidade(int vertice_inicio) {
 	// inicialização
 	for(i = 0; i < qnt_nos; i++) {
 		cores[i] = BRANCO;
-		predecessores[i] = nil;
+		predecessores[i] = NIL;
 	}
 
 	for(i = vertice_inicio; i < qnt_nos; i++) {
@@ -105,25 +127,55 @@ void Grafo::buscaEmProfundidade(int vertice_inicio) {
 			buscaEmProfundidadeVisit(i);
 		}
 	}
-	std::cout << "Ordem de acesso: ";
-	auto it = ordem.cbegin();
-	for (auto fim = std::prev(ordem.cend()); it != fim; it++) {
-        std::cout << *it << " - ";
-    }
-    std::cout << *it << '\n';
 
-    std::cout << "Predecessores:   ";
-    for (i = 0; i < qnt_nos - 1; i++) {
-        if (predecessores[i] == nil) {
-            std::cout << "nil";
-        } else {
-            std::cout << predecessores[i];
-        }
-        std::cout << " - ";
-	}
-    std::cout << predecessores[i] << '\n';
+	printOrdemAcesso();
+	printPredecessores();
 
 	delete[] cores;
+	delete[] predecessores;
+	ordem.clear();
+}
+
+void Grafo::buscaEmLargura(int vertice_inicio) {
+	int i;
+	std::queue<int> fila;
+	int max_dist  = std::numeric_limits<int>::max();
+	predecessores = new(std::nothrow) int[qnt_nos];
+	cores         = new(std::nothrow) cor[qnt_nos];
+	dist		  = new(std::nothrow) int[qnt_nos];
+
+	// inicialização
+	for(i = 0; i < qnt_nos; i++) {
+		cores[i] = BRANCO;
+		predecessores[i] = NIL;
+		dist[i] = max_dist;
+	}
+	cores[vertice_inicio] = CINZA;
+	dist[vertice_inicio] = 0;
+	fila.push(vertice_inicio);
+	ordem.push_back(vertice_inicio);
+
+	int cabeca;
+	while(!fila.empty()) {
+		cabeca = fila.front();
+		for(auto it : grafo[cabeca]) { // eliminar copias
+			if (cores[it.getId()] == BRANCO) {
+				int salva_id = it.getId();
+				cores[salva_id] = CINZA;
+				dist[salva_id] = dist[cabeca] + 1;
+				predecessores[salva_id] = cabeca;
+				fila.push(salva_id);
+				ordem.push_back(salva_id);
+			}
+		}
+		fila.pop();
+		cores[cabeca] = PRETO;
+	}
+	printOrdemAcesso();
+	printPredecessores();
+
+	delete[] cores;
+	delete[] dist;
 	delete[] predecessores;
 	ordem.clear();
 }
@@ -134,5 +186,5 @@ Grafo::~Grafo() {
 		grafo[i].clear();
 	}
 	delete []grafo;
-	std::cout << "Destruindo um grafo" << std::endl;
+	debug("Destruindo um grafo\n");
 }

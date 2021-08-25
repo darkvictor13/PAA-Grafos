@@ -9,7 +9,7 @@
 #include "no_grafo.hpp"
 
 NoGrafo::NoGrafo(int id, int peso) {
-	std::cout << "Construindo um No, com parametros\n";
+	debug("Construindo um No, com parametros\n");
 	this->id = id;
 	this->peso = peso;
 }
@@ -46,5 +46,5 @@ void NoGrafo::setPeso(int peso) {
 }
 
 NoGrafo::~NoGrafo() {
-	std::cout << "Destruindo o No\n";
+	debug("Destruindo o No\n");
 }

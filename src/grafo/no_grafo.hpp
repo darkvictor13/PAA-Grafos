@@ -10,6 +10,7 @@
 #define NO_GRAFO
 
 #include <iostream>
+#include "../utils/debug.hpp"
 
 /**
  * @brief 
