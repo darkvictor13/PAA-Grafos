@@ -8,43 +8,67 @@
 
 #include "no_grafo.hpp"
 
+/**
+ * @brief Construtor da classe NoGrafo
+ *
+ * @pre Nenhuma
+ * @post Nenhuma
+ */
+NoGrafo::NoGrafo() {
+	debug("Construindo um No, sem parametros\n");
+	this->id = 0;
+	this->peso = 0;
+}
+
+/**
+ * @brief Construtor da classe No Grafo
+ *
+ * @param id numero que representa o vertice
+ * @param peso peso da aresta que chega ao vertice
+ * @pre Nenhuma
+ * @post Nenhuma
+ */
 NoGrafo::NoGrafo(int id, int peso) {
 	debug("Construindo um No, com parametros\n");
 	this->id = id;
 	this->peso = peso;
 }
 
-NoGrafo::NoGrafo() {
-	std::cout << "Construindo um No, sem parametros\n";
-	this->id = 0;
-	this->peso = 0;
-}
-
+/**
+ * @brief Sobrecarga do operador < necessária para ordenação
+ *
+ * faz a comparação a partir do id do vértice
+ * @param other
+ * @return true se this->id é maior
+ * @return false se other.id é maior
+ * @pre Nenhuma
+ * @post Nenhuma
+ */
 bool NoGrafo::operator<(const NoGrafo& other) {
 	return this->id < other.id;
 }
 
+/**
+ * @brief Sobrecarga do operador < necessária para impressão em stream
+ *
+ * @param out stream para escrita, podendo ser um arquivo ou o terminal
+ * @param other A classe que contém os dados a serem impressos
+ * @return std::ostream& ponteiro implicíto para a stram,
+ * para continuar a impressão com <<
+ * @pre Nenhuma
+ * @post Nenhuma
+ */
 std::ostream& operator << (std::ostream &out, const NoGrafo& other) {
 	out << '[' << other.id << ']';
 	return out;
 }
 
-int NoGrafo::getId() {
-	return id;
-}
-
-int NoGrafo::getPeso() {
-	return peso;
-}
-
-void NoGrafo::setId(int id) {
-    this->id = id;
-}
-
-void NoGrafo::setPeso(int peso) {
-    this->peso = peso;
-}
-
+/**
+ * @brief Destrutor da classe NoGrafo
+ *
+ * @pre Nenhuma
+ * @post Nenhuma
+ */
 NoGrafo::~NoGrafo() {
 	debug("Destruindo o No\n");
 }

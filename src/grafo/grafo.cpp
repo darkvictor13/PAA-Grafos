@@ -38,14 +38,13 @@ void Grafo::constroi(std::istream& file) {
     NoGrafo temp;
     int index;
     while (getline(file, line)) {
-        temp.setId(atoi(&line[line.find_first_of(',') + 1]));
-        temp.setPeso(atoi(&line[line.find_first_of(':') + 1]));
+        temp.id = atoi(&line[line.find_first_of(',') + 1]);
+        temp.peso = atoi(&line[line.find_first_of(':') + 1]);
         index = atoi(&line[1]);
         grafo[index].push_back(temp);
         if (!isOrientado) {
-			int troca = temp.getId();
-			temp.setId(index);
-            grafo[troca].push_back(temp);
+			std::swap(index, temp.id);
+            grafo[index].push_back(temp);
         }
     }
 }
@@ -155,9 +154,9 @@ void Grafo::buscaEmProfundidadeVisit(int index) {
 	ordem.push_back(index);
 	cores[index] = CINZA;
 	for(auto it : grafo[index]) { // eliminar copias
-		if(cores[it.getId()] == BRANCO) {
-			predecessores[it.getId()] = index;
-			buscaEmProfundidadeVisit(it.getId());
+		if(cores[it.id] == BRANCO) {
+			predecessores[it.id] = index;
+			buscaEmProfundidadeVisit(it.id);
 		}
 	}
 	cores[index] = PRETO;
@@ -235,8 +234,8 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
 	while(!fila.empty()) {
 		cabeca = fila.front();
 		for(auto it : grafo[cabeca]) { // eliminar copias
-			if (cores[it.getId()] == BRANCO) {
-				int salva_id = it.getId();
+			if (cores[it.id] == BRANCO) {
+				int salva_id = it.id;
 				cores[salva_id] = CINZA;
 				dist[salva_id] = dist[cabeca] + 1;
 				predecessores[salva_id] = cabeca;
