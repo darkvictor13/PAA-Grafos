@@ -49,8 +49,8 @@ enum cor {
 class Grafo {
     private:
         bool isOrientado; /// booleano que indica se o grafo é orientado
-        int qnt_nos;  /// inteiro que indica a quantidade de vertices do grafo
-        std::list<NoGrafo> *grafo;  /// vetor de listas de vertices
+        int qnt_nos;  /// inteiro que indica a quantidade de vértices do grafo
+        std::list<NoGrafo> *grafo;  /// vetor de listas de vértices
 
         cor *cores;  /// vetor de cores, alocado somente quando tem busca em
                      /// profundidade ou largura
@@ -58,10 +58,10 @@ class Grafo {
         int *predecessores;  /// vetor de predecessores, alocado somente quando
                              /// tem busca em profundidade ou largura
 
-        int *dist;  /// vetor que informa a distância do vertice até a origem,
+        int *dist;  /// vetor que informa a distância do vértice até a origem,
                     /// utilizado apenas na busca em largura
 
-        std::list<int> ordem;  /// vetor que informa a ordem em que os vertices
+        std::list<int> ordem;  /// vetor que informa a ordem em que os vértices
                                /// foram acessados, alocado somente quando tem
                                /// busca em profundidade ou largura
 
@@ -75,17 +75,17 @@ class Grafo {
         void constroi(std::istream& in);
 
         /**
-         * @brief Explora um vertice de cor branca, visitando recursivamente
-         * todos os vertices adjacentes
+         * @brief Explora um vértice de cor branca, visitando recursivamente
+         * todos os vértices adjacentes
          *
-         * @param index Vertice a ser explorado, cor branca
+         * @param index Vértice a ser explorado, cor branca
          * @pre Somente chamado pela buscaEmProfuntidade
-         * @post Vertice index totalmente explorado, cor preto
+         * @post Vértice index totalmente explorado, cor preto
          */
         void buscaEmProfundidadeVisit(int index);
 
         /**
-         * @brief Imprime a lista que contém a ordem de acesso dos vertices
+         * @brief Imprime a lista que contém a ordem de acesso dos vértices
          *
          * @pre lista ordem alocada
          * @post lista impressa na saída padrão
@@ -114,10 +114,17 @@ class Grafo {
          * 
          * ver a função constroi
          * @param filename o nome do arquivo a ser lido
-         * @pre filename contem um nome de arquivo valido
+         * @pre filename contem um nome de arquivo valido e grafo desalocado
          * @post Grafo inicializado com os dados
          */
         void ler(std::string filename);
+
+        /**
+         * @brief Cria o grafo com as informações recebidas da entrada padrão
+         *
+         * @pre Grafo desalocado
+         * @post Nenhuma
+         */
         void ler();
 
         /**
@@ -137,8 +144,26 @@ class Grafo {
          */
         void ordena();
 
-        //----- Algoritimos de um grafo -----//
+        //----------------- Algorítimos de um grafo -----------------//
+
+        /**
+         * @brief Visita os vértices a partir de um ponto inicial,
+         * seguindo o algorítimo de busca em profundidade
+         * 
+         * @param vertice_inicio deve estar dentro dos limites do vértice
+         * @pre Grafo inicializado com ler
+         * @post ordem de visitação vértices impressa na saída padrão
+         */
         void buscaEmProfundidade(int vertice_inicio);
+
+        /**
+         * @brief Visita os vértices a partir de um ponto inicial,
+         * seguindo o algorítimo de busca em largura
+         * 
+         * @param vertice_inicio deve estar dentro dos limites do vértice
+         * @pre Grafo inicializado com ler
+         * @post ordem de visitação vértices impressa na saída padrão
+         */
         void buscaEmLargura(int vertice_inicio);
 
         /**

@@ -8,10 +8,23 @@
 
 #include "grafo.hpp"
 
+/**
+ * @brief Construtor da classe Grafo
+ *
+ * @pre Nenhuma
+ * @post Nenhuma
+ */
 Grafo::Grafo() {
 	debug("Construindo um grafo\n");
 }
 
+/**
+ * @brief Constroi um grafo a partir de dados de entrada
+ *
+ * @param in uma stream, podendo ser cin ou um arquivo
+ * @pre uma stream de entrada válida
+ * @post Grafo alocado e contendo os dados da stream
+ */
 void Grafo::constroi(std::istream& file) {
     std::string line;
     getline(file, line);
@@ -37,6 +50,14 @@ void Grafo::constroi(std::istream& file) {
     }
 }
 
+/**
+ * @brief Cria o grafo com as informações contidas no arquivo
+ *
+ * ver a função constroi
+ * @param filename o nome do arquivo a ser lido
+ * @pre filename contem um nome de arquivo valido e grafo desalocado
+ * @post Grafo inicializado com os dados
+ */
 void Grafo::ler(std::string filename) {
     std::ifstream file;
     file.open(filename);
@@ -46,11 +67,23 @@ void Grafo::ler(std::string filename) {
 	file.close();
 }
 
+/**
+ * @brief Cria o grafo com as informações recebidas da entrada padrão
+ *
+ * @pre Grafo desalocado
+ * @post Nenhuma
+ */
 void Grafo::ler() {
 	debug("Informe os dados na mesma sintaxe do arquivo\n");
 	constroi(std::cin);
 }
 
+/**
+ * @brief Imprime os grafos, em um formato de lista de adjacencia
+ *
+ * @pre Nenhuma
+ * @post Nenhuma
+ */
 void Grafo::show() {
 	for (int i = 0; i < this->qnt_nos; i++) {
 		std::cout << "Arestas que saem de " << i << ": ";
@@ -61,12 +94,25 @@ void Grafo::show() {
 	}
 }
 
+/**
+ * @brief Ordena cada uma das Listas de Adjacência
+ *
+ * Complexidade O(n^2 * n*lg(n))
+ * @pre o vetor de listas (grafo), deve estar alocado
+ * @post cada lista do grafo está ordenada
+ */
 void Grafo::ordena() {
 	for(int i = 0; i < qnt_nos; i++) {
 		grafo[i].sort();
 	}
 }
 
+/**
+ * @brief Imprime a lista que contém a ordem de acesso dos vertices
+ *
+ * @pre lista ordem alocada
+ * @post lista impressa na saída padrão
+ */
 void Grafo::printOrdemAcesso() {
 	std::cout << "Ordem de acesso: ";
 	auto it = ordem.cbegin();
@@ -76,6 +122,12 @@ void Grafo::printOrdemAcesso() {
     std::cout << *it << '\n';
 }
 
+/**
+ * @brief Imprime o vetor de predecessores
+ *
+ * @pre vetor de predecessores alocada
+ * @post vetor de predecessores impressa na saída padrão
+ */
 void Grafo::printPredecessores() {
 	int i;
     std::cout << "Predecessores:   ";
@@ -90,6 +142,14 @@ void Grafo::printPredecessores() {
     std::cout << predecessores[i] << '\n';
 }
 
+/**
+ * @brief Explora um vértice de cor branca, visitando recursivamente
+ * todos os vertices adjacentes
+ *
+ * @param index Vértice a ser explorado, cor branca
+ * @pre Somente chamado pela buscaEmProfuntidade
+ * @post Vértice index totalmente explorado, cor preto
+ */
 void Grafo::buscaEmProfundidadeVisit(int index) {
 	std::cout << index << '\n';
 	ordem.push_back(index);
@@ -103,6 +163,14 @@ void Grafo::buscaEmProfundidadeVisit(int index) {
 	cores[index] = PRETO;
 }
 
+/**
+ * @brief Visita os vértices a partir de um ponto inicial,
+ * seguindo o algorítimo de busca em profundidade
+ *
+ * @param vertice_inicio deve estar dentro dos limites do vértice
+ * @pre Grafo inicializado com ler
+ * @post ordem de visitação vértices impressa na saída padrão
+ */
 void Grafo::buscaEmProfundidade(int vertice_inicio) {
 	int i;
 	//int NIL = std::numeric_limits<int>::max();
@@ -136,6 +204,14 @@ void Grafo::buscaEmProfundidade(int vertice_inicio) {
 	ordem.clear();
 }
 
+/**
+ * @brief Visita os vértices a partir de um ponto inicial,
+ * seguindo o algorítimo de busca em largura
+ *
+ * @param vertice_inicio deve estar dentro dos limites do vértice
+ * @pre Grafo inicializado com ler
+ * @post ordem de visitação vértices impressa na saída padrão
+ */
 void Grafo::buscaEmLargura(int vertice_inicio) {
 	int i;
 	std::queue<int> fila;
@@ -180,7 +256,12 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
 	ordem.clear();
 }
 
-
+/**
+ * @brief Destrutor da classe Grafo
+ *
+ * @pre Nenhuma
+ * @post Nenhuma
+ */
 Grafo::~Grafo() {
 	for(int i = 0; i < this->qnt_nos; i++) {
 		grafo[i].clear();
