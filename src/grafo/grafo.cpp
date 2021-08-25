@@ -1,7 +1,7 @@
 /**
  * @file grafo.cpp
  * @author Victor Emanuel Almeida (victoralmeida2001@hotmail.com)
- * @brief 
+ * @brief Implementa todas as funcionalidade da classe Grafo
  * @version 0.1
  * @date 24/08/2021
  */

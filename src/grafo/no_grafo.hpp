@@ -1,7 +1,8 @@
 /**
  * @file no_grafo.hpp
  * @author Victor Emanuel Almeida (victoralmeida2001@hotmail.com)
- * @brief 
+ * @brief Define a classe NoGrafo.
+ * 
  * @version 0.1
  * @date 24/08/2021
  */
