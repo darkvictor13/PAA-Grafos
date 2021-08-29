@@ -13,11 +13,11 @@
 
 #include <list>
 #include <queue>
-#include <limits>
 #include <algorithm>
 #include <vector>
 #include <fstream>
 #include <string>
+#include <climits>
 
 #include "no_grafo.hpp"
 #include "../utils/debug.hpp"
@@ -40,6 +40,8 @@ enum cor {
  *  - Busca em largura
  */
 #define NIL -1
+
+#define MAX_DIST INT_MAX
 
 /**
  * @brief Classe que representa um único grafo,
@@ -102,6 +104,28 @@ class Grafo {
          */
         void printPredecessores();
 
+        /**
+         * @brief Inicializa o vertice de origem
+         *
+         * Utilizado no algorítimo de Bellman-Ford
+         * @pre predecessores e dist inicializados
+         * @post vértice de origem e suas estruturas auxiliares
+         * inicializadas
+         */
+        void inicializaOrigem(int origem);
+
+        /**
+         * @brief Diminui o limite superior do peso do menor caminho
+         * 
+         * Utilizado no algorítimo de Bellman-Ford
+         * @param inicio vertice que inicia o caminho
+         * @param fim vertice que acaba o caminho
+         * @pre Um algorítimo de menor caminho estar sendo executado
+         * com suas estruturas alocadas
+         * @post menor peso entre início e fim
+         */
+        void relax(int inicio, int fim);
+
     public:
         /**
          * @brief Construtor da classe Grafo
@@ -135,7 +159,7 @@ class Grafo {
          * @pre Nenhuma
          * @post Nenhuma
          */
-        void show();
+        void mostrar();
 
         /**
          * @brief Ordena cada uma das Listas de Adjacência
@@ -167,6 +191,8 @@ class Grafo {
          * @post ordem de visitação vértices impressa na saída padrão
          */
         void buscaEmLargura(int vertice_inicio);
+
+        bool bellmanFord(int vertice_inicio);
 
         /**
          * @brief Destrutor da classe Grafo

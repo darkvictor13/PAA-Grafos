@@ -52,6 +52,18 @@ public:
 	bool operator < (const NoGrafo& other);
 
 	/**
+	 * @brief Sobrecarga do operador < necessária para std::find
+	 * 
+	 * faz a comparação a partir do id do vértice
+	 * @param other 
+	 * @return true se other é igual ao id do vertice
+	 * @return false se other é diferente ao id do vertice
+	 * @pre Nenhuma
+	 * @post Nenhuma
+	 */
+	bool operator == (int other);
+
+	/**
 	 * @brief Sobrecarga do operador < necessária para impressão em stream
 	 * 
 	 * @param out stream para escrita, podendo ser um arquivo ou o terminal

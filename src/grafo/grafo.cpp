@@ -67,6 +67,40 @@ void Grafo::ler(std::string filename) {
 }
 
 /**
+ * @brief Inicializa o vertice de origem
+ *
+ * Utilizado no algorítimo de Bellman-Ford
+ * @pre predecessores e dist inicializados
+ * @post vértice de origem e suas estruturas auxiliares
+ * inicializadas
+ */
+void Grafo::inicializaOrigem(int origem) {
+	for(int i = 0; i < grafo->size(); i++) {
+		predecessores[i] = NIL;
+		dist[i] = MAX_DIST;
+	}
+	dist[origem] = 0;
+}
+
+/**
+ * @brief Diminui o limite superior do peso do menor caminho
+ *
+ * Utilizado no algorítimo de Bellman-Ford
+ * @param inicio vertice que inicia o caminho
+ * @param fim vertice que acaba o caminho
+ * @pre Um algorítimo de menor caminho estar sendo executado
+ * com suas estruturas alocadas
+ * @post menor peso entre início e fim
+ */
+void Grafo::relax(int inicio, int fim) {
+	auto elemento = std::find(grafo[inicio].begin(), grafo[inicio].end(), fim);
+	if (dist[fim] > (dist[inicio] + elemento->peso)) {
+		dist[fim] = dist[inicio] + elemento->peso;
+		predecessores[fim] = inicio;
+	}
+}
+
+/**
  * @brief Cria o grafo com as informações recebidas da entrada padrão
  *
  * @pre Grafo desalocado
@@ -83,7 +117,7 @@ void Grafo::ler() {
  * @pre Nenhuma
  * @post Nenhuma
  */
-void Grafo::show() {
+void Grafo::mostrar() {
 	for (int i = 0; i < this->qnt_nos; i++) {
 		std::cout << "Arestas que saem de " << i << ": ";
 		for (auto const &iterator : grafo[i]) {
@@ -214,7 +248,6 @@ void Grafo::buscaEmProfundidade(int vertice_inicio) {
 void Grafo::buscaEmLargura(int vertice_inicio) {
 	int i;
 	std::queue<int> fila;
-	int max_dist  = std::numeric_limits<int>::max();
 	predecessores = new(std::nothrow) int[qnt_nos];
 	cores         = new(std::nothrow) cor[qnt_nos];
 	dist		  = new(std::nothrow) int[qnt_nos];
@@ -223,7 +256,7 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
 	for(i = 0; i < qnt_nos; i++) {
 		cores[i] = BRANCO;
 		predecessores[i] = NIL;
-		dist[i] = max_dist;
+		dist[i] = MAX_DIST;
 	}
 	cores[vertice_inicio] = CINZA;
 	dist[vertice_inicio] = 0;
@@ -253,6 +286,31 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
 	delete[] dist;
 	delete[] predecessores;
 	ordem.clear();
+}
+
+bool Grafo::bellmanFord(int vertice_inicio) {
+	int i;
+	bool ret = true;
+	predecessores = new(std::nothrow) int[qnt_nos];
+	dist		  = new(std::nothrow) int[qnt_nos];
+
+	inicializaOrigem(vertice_inicio);
+
+	for(i = 0; i < grafo->size(); i++) {
+		for(;;) { // for each (u, v ) ∈ E do
+			relax(0, 0);
+		}
+	}
+
+	for(;;) { // for each (u, v ) ∈ E do
+		if (true) { // if d[v] > d[u] + w (u, v) then
+			ret = false;
+		}
+	}
+
+	delete[] dist;
+	delete[] predecessores;
+	return ret;
 }
 
 /**
