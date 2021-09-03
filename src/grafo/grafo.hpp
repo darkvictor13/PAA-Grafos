@@ -104,6 +104,8 @@ class Grafo {
          */
         void printPredecessores();
 
+        void printDist();
+
         /**
          * @brief Inicializa o vertice de origem
          *

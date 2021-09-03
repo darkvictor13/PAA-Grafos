@@ -1,7 +1,7 @@
 # O Compilador usado
 CC=g++
 # flags das libs utilizadas
-LIBS=-lm
+LIBS=-std=c++17 -O2 -lm
 
 CAMINHO=../src/
 

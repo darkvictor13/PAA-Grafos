@@ -75,7 +75,7 @@ void Grafo::ler(std::string filename) {
  * inicializadas
  */
 void Grafo::inicializaOrigem(int origem) {
-	for(int i = 0; i < grafo->size(); i++) {
+	for(int i = 0; i < qnt_nos; i++) {
 		predecessores[i] = NIL;
 		dist[i] = MAX_DIST;
 	}
@@ -175,6 +175,20 @@ void Grafo::printPredecessores() {
     std::cout << predecessores[i] << '\n';
 }
 
+void Grafo::printDist() {
+	int i;
+    std::cout << "dist.:   ";
+    for (i = 0; i < qnt_nos - 1; i++) {
+        if (dist[i] == MAX_DIST) {
+            std::cout << "INF";
+        } else {
+            std::cout << dist[i];
+        }
+        std::cout << " - ";
+    }
+    std::cout << dist[i] << '\n';
+}
+
 /**
  * @brief Explora um vértice de cor branca, visitando recursivamente
  * todos os vertices adjacentes
@@ -184,7 +198,6 @@ void Grafo::printPredecessores() {
  * @post Vértice index totalmente explorado, cor preto
  */
 void Grafo::buscaEmProfundidadeVisit(int index) {
-	std::cout << index << '\n';
 	ordem.push_back(index);
 	cores[index] = CINZA;
 	for(auto it : grafo[index]) { // eliminar copias
@@ -289,24 +302,32 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
 }
 
 bool Grafo::bellmanFord(int vertice_inicio) {
-	int i;
+	int i, qnt = 0;
 	bool ret = true;
 	predecessores = new(std::nothrow) int[qnt_nos];
 	dist		  = new(std::nothrow) int[qnt_nos];
 
 	inicializaOrigem(vertice_inicio);
 
-	for(i = 0; i < grafo->size(); i++) {
-		for(;;) { // for each (u, v ) ∈ E do
-			relax(0, 0);
+	while (qnt < qnt_nos - 1) {
+		for(i = 0; i < qnt_nos; i++) {
+			for(auto it : grafo[i]) { // for each (u, v ) ∈ E do
+				relax(i, it.id);
+			}
+		}
+		qnt++;
+	}
+
+	for(i = 0; i < qnt_nos; i++) { // for each (u, v ) ∈ E do
+		for (auto it : grafo[i]) {
+			if (dist[it.id] > dist[i] + it.peso) { // if d[v] > d[u] + w (u, v) then
+				ret = false;
+			}
 		}
 	}
 
-	for(;;) { // for each (u, v ) ∈ E do
-		if (true) { // if d[v] > d[u] + w (u, v) then
-			ret = false;
-		}
-	}
+	printPredecessores();
+	printDist();
 
 	delete[] dist;
 	delete[] predecessores;
