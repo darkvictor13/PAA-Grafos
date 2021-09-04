@@ -198,6 +198,8 @@ void Grafo::printDist() {
  * @post Vértice index totalmente explorado, cor preto
  */
 void Grafo::buscaEmProfundidadeVisit(int index) {
+	debug(index);
+	debug('\n');
 	ordem.push_back(index);
 	cores[index] = CINZA;
 	for(auto it : grafo[index]) { // eliminar copias
