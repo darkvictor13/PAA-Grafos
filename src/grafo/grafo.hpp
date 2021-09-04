@@ -41,7 +41,10 @@ enum cor {
  */
 #define NIL -1
 
-#define MAX_DIST INT_MAX
+/**
+ * @brief Distancia máxima possível que não causa overflow em um int
+ */
+#define MAX_DIST ((INT_MAX/2) - 1)
 
 /**
  * @brief Classe que representa um único grafo,
@@ -105,6 +108,19 @@ class Grafo {
         void printPredecessores();
 
         void printDist();
+
+        /**
+         * @brief Utilizado para mostrar na tela o caminho de um
+         * vertice origem até um vertice fim utilizando a lista de
+         * predecessores
+         * 
+         * Utilizado no algoritimo de BellMan-Ford
+         * @param inicio vertice que inicia o caminho
+         * @param fim vertice que acaba o caminho
+         * @pre vetor de predecessores alocado
+         * @post Caminho impresso na tela
+         */
+        void printCaminho(int inicio, int fim);
 
         /**
          * @brief Inicializa o vertice de origem

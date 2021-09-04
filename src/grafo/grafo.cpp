@@ -94,9 +94,11 @@ void Grafo::inicializaOrigem(int origem) {
  */
 void Grafo::relax(int inicio, int fim) {
 	auto elemento = std::find(grafo[inicio].begin(), grafo[inicio].end(), fim);
-	if (dist[fim] > (dist[inicio] + elemento->peso)) {
-		dist[fim] = dist[inicio] + elemento->peso;
-		predecessores[fim] = inicio;
+	if (*elemento == fim) {
+		if (dist[fim] > (dist[inicio] + elemento->peso)) {
+			dist[fim] = dist[inicio] + elemento->peso;
+			predecessores[fim] = inicio;
+		}
 	}
 }
 
@@ -303,33 +305,63 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
 	ordem.clear();
 }
 
+/**
+ * @brief Utilizado para mostrar na tela o caminho de um
+ * vertice origem até um vertice fim utilizando a lista de
+ * predecessores
+ *
+ * Utilizado no algoritimo de BellMan-Ford
+ * @param inicio vertice que inicia o caminho
+ * @param fim vertice que acaba o caminho
+ * @pre vetor de predecessores alocado
+ * @post Caminho impresso na tela
+ */
+void Grafo::printCaminho(int inicio, int fim) {
+	if (inicio == fim) {
+		std::cout << inicio;
+	}
+	std::cout << fim << " - ";
+	printCaminho(inicio, predecessores[fim]);
+}
+
 bool Grafo::bellmanFord(int vertice_inicio) {
 	int i, qnt = 0;
 	bool ret = true;
-	predecessores = new(std::nothrow) int[qnt_nos];
-	dist		  = new(std::nothrow) int[qnt_nos];
+	predecessores = new int[qnt_nos];
+	dist		  = new int[qnt_nos];
 
 	inicializaOrigem(vertice_inicio);
 
 	while (qnt < qnt_nos - 1) {
+		// percorre cada uma das arestas
 		for(i = 0; i < qnt_nos; i++) {
-			for(auto it : grafo[i]) { // for each (u, v ) ∈ E do
+			for(auto it : grafo[i]) {
 				relax(i, it.id);
 			}
 		}
 		qnt++;
 	}
 
-	for(i = 0; i < qnt_nos; i++) { // for each (u, v ) ∈ E do
+	// percorre cada uma das arestas
+	for(i = 0; i < qnt_nos; i++) {
 		for (auto it : grafo[i]) {
-			if (dist[it.id] > dist[i] + it.peso) { // if d[v] > d[u] + w (u, v) then
+			if (dist[it.id] > dist[i] + it.peso) {
 				ret = false;
+				break;
 			}
 		}
 	}
 
-	printPredecessores();
-	printDist();
+	//if (ret) {
+		for(i = 0; i < qnt_nos; i++) {
+			std::cout << "caminho: ";
+			printCaminho(vertice_inicio, i);
+		}
+	//}else {
+		//std::cout << "O Grafo Possui ciclo negativo" << std::endl;
+	//}
+	//printPredecessores();
+	//printDist();
 
 	delete[] dist;
 	delete[] predecessores;

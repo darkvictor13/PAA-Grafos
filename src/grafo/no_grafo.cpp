@@ -73,7 +73,7 @@ bool NoGrafo::operator==(int other) {
  * @post Nenhuma
  */
 std::ostream& operator << (std::ostream &out, const NoGrafo& other) {
-	out << '[' << other.id << ']';
+	out << '[' << other.id << ", " << other.peso << ']';
 	return out;
 }
 
