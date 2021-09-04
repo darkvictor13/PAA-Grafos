@@ -368,6 +368,10 @@ bool Grafo::bellmanFord(int vertice_inicio) {
 	return ret;
 }
 
+void kruskal(){
+	
+}
+
 /**
  * @brief Destrutor da classe Grafo
  *

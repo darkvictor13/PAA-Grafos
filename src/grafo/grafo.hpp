@@ -212,6 +212,8 @@ class Grafo {
 
         bool bellmanFord(int vertice_inicio);
 
+        void kruskal();
+
         /**
          * @brief Destrutor da classe Grafo
          * 
