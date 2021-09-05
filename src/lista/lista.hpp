@@ -17,8 +17,26 @@
 template<class T>
 struct No {
 	T dado;
-	struct No *prox;
+	struct No *proximo;
 	struct No *anterior;
+
+	No(No<T> *a, No<T> *p, T d) {
+		this->dado = d;
+		this->anterior = a;
+		this->proximo = p;
+	}
+
+	No(T d) {
+		this->dado = d;
+		this->anterior = nullptr;
+		this->proximo = nullptr;
+	}
+
+	No() {
+		this->dado = 0;
+		this->anterior = nullptr;
+		this->proximo = nullptr;
+	}
 };
 
 template<class T>
@@ -32,6 +50,19 @@ class Lista {
 private:
 	No<T> *cabeca;
 	No<T> *cauda;
+
+	void encadeia(No<T> *anterior, No<T> *proximo, T dado) {
+		No<T> *novo = new No(anterior, proximo, dado);
+
+		anterior->proximo = novo;
+		proximo->anterior = novo;
+	}
+	
+
+	void insereOrdenadoRec(T dado) {
+
+	}
+
 public:
 	Lista() {
 		this->cabeca = nullptr;
@@ -43,34 +74,35 @@ public:
 	}
 
 	void insereInicio(T dado) {
-		No<T> *novo = new No<T>;
-		novo->dado = dado;
-		novo->anterior = nullptr;
+		No<T> *novo = new No<T>(dado);
 		if (isVazia()) {
 			this->cabeca = novo;
 			this->cauda = novo;
-			novo->prox = nullptr;
 		} else {
-			novo->prox = this->cabeca;
+			novo->proximo = this->cabeca;
 			this->cabeca->anterior = novo;
 			this->cabeca = novo;
 		}
 	}
 
-	void insereOrdenado(T dado);
+	void insereOrdenado(T dado) {
+		if (isVazia() || this->cabeca->dado <= dado) {
+			insereInicio(dado);
+		}
+	}
 
 	// usar na fila
 	void insereFim(T dado) {
 		No<T> *novo = new No<T>;
 		novo->dado = dado;
-		novo->prox = nullptr;
+		novo->proximo = nullptr;
 		if (isVazia()) {
 			this->cabeca = novo;
 			this->cauda = novo;
 			novo->anterior = nullptr;
 		} else {
 			novo->anterior = this->cauda;
-			this->cauda->prox = novo;
+			this->cauda->proximo = novo;
 			this->cauda = novo;
 		}
 	}
@@ -80,7 +112,7 @@ public:
 
 		No<T> *salva_cauda = this->cauda;
 		this->cauda = this->cauda->anterior;
-		this->cauda->prox = nullptr;
+		this->cauda->proximo = nullptr;
 
 		salva_cauda->anterior = nullptr;
 		delete salva_cauda;
@@ -91,10 +123,10 @@ public:
 		if (isVazia()) return ;
 
 		No<T> *salva_cabeca = this->cabeca;
-		this->cabeca = this->cabeca->prox;
+		this->cabeca = this->cabeca->proximo;
 		this->cabeca->anterior = nullptr;
 
-		salva_cabeca->prox = nullptr;
+		salva_cabeca->proximo = nullptr;
 		delete salva_cabeca;
 	}
 
@@ -107,7 +139,7 @@ public:
 		No<T> *percorre = cabeca;
 		while (percorre != cauda) {
 			std::cout << percorre->dado << ' ';
-			percorre = percorre->prox;
+			percorre = percorre->proximo;
 		}
 		std::cout << percorre->dado << '\n';
 	}
