@@ -21,14 +21,13 @@ int main (int argc, char *argv[]) {
     //l.insereInicio(*new NoGrafo(4, 4));
     l.insereFim(1);
     l.insereFim(2);
+    debug(l.tam() << '\n');
     l.mostrar();
     l.mostrarInvertido();
     l.retiraInicio();
     l.mostrar();
     l.mostrarInvertido();
-    debug("Antes de retirar o fim\n");
     l.retiraFim();
-    debug("Depois de retirar o fim\n");
 
     /*
     Grafo g;

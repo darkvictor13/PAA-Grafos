@@ -142,6 +142,14 @@ void Grafo::ordena() {
 	}
 }
 
+int Grafo::qntArestas() {
+    int qnt = 0;
+    for (int i = 0; i < qnt_nos; i++) {
+        //qnt += grafo[i].tam();
+    }
+    return qnt;
+}
+
 /**
  * @brief Imprime a lista que contém a ordem de acesso dos vertices
  *
@@ -149,9 +157,9 @@ void Grafo::ordena() {
  * @post lista impressa na saída padrão
  */
 void Grafo::printOrdemAcesso() {
-	std::cout << "Ordem de acesso: ";
-	auto it = ordem.cbegin();
-	for (auto fim = std::prev(ordem.cend()); it != fim; it++) {
+    std::cout << "Ordem de acesso: ";
+    auto it = ordem.cbegin();
+    for (auto fim = std::prev(ordem.cend()); it != fim; it++) {
         std::cout << *it << " - ";
     }
     std::cout << *it << '\n';
@@ -164,7 +172,7 @@ void Grafo::printOrdemAcesso() {
  * @post vetor de predecessores impressa na saída padrão
  */
 void Grafo::printPredecessores() {
-	int i;
+    int i;
     std::cout << "Predecessores:   ";
     for (i = 0; i < qnt_nos - 1; i++) {
         if (predecessores[i] == NIL) {
@@ -178,7 +186,7 @@ void Grafo::printPredecessores() {
 }
 
 void Grafo::printDist() {
-	int i;
+    int i;
     std::cout << "dist.:   ";
     for (i = 0; i < qnt_nos - 1; i++) {
         if (dist[i] == MAX_DIST) {
@@ -200,17 +208,17 @@ void Grafo::printDist() {
  * @post Vértice index totalmente explorado, cor preto
  */
 void Grafo::buscaEmProfundidadeVisit(int index) {
-	debug(index);
-	debug('\n');
-	ordem.push_back(index);
-	cores[index] = CINZA;
-	for(auto it : grafo[index]) { // eliminar copias
-		if(cores[it.id] == BRANCO) {
-			predecessores[it.id] = index;
-			buscaEmProfundidadeVisit(it.id);
-		}
-	}
-	cores[index] = PRETO;
+    debug(index);
+    debug('\n');
+    ordem.push_back(index);
+    cores[index] = CINZA;
+    for(auto it : grafo[index]) { // eliminar copias
+        if(cores[it.id] == BRANCO) {
+            predecessores[it.id] = index;
+            buscaEmProfundidadeVisit(it.id);
+        }
+    }
+    cores[index] = PRETO;
 }
 
 /**
@@ -222,36 +230,36 @@ void Grafo::buscaEmProfundidadeVisit(int index) {
  * @post ordem de visitação vértices impressa na saída padrão
  */
 void Grafo::buscaEmProfundidade(int vertice_inicio) {
-	int i;
-	//int NIL = std::numeric_limits<int>::max();
+    int i;
+    //int NIL = std::numeric_limits<int>::max();
 
-	predecessores = new(std::nothrow) int[qnt_nos];
-	cores         = new(std::nothrow) cor[qnt_nos];
+    predecessores = new(std::nothrow) int[qnt_nos];
+    cores         = new(std::nothrow) cor[qnt_nos];
 
-	// inicialização
-	for(i = 0; i < qnt_nos; i++) {
-		cores[i] = BRANCO;
-		predecessores[i] = NIL;
-	}
+    // inicialização
+    for(i = 0; i < qnt_nos; i++) {
+        cores[i] = BRANCO;
+        predecessores[i] = NIL;
+    }
 
-	for(i = vertice_inicio; i < qnt_nos; i++) {
-		if (cores[i] == BRANCO) {
-			buscaEmProfundidadeVisit(i);
-		}
-	}
+    for(i = vertice_inicio; i < qnt_nos; i++) {
+        if (cores[i] == BRANCO) {
+            buscaEmProfundidadeVisit(i);
+        }
+    }
 
-	for(i = 0; i < vertice_inicio; i++) {
-		if (cores[i] == BRANCO) {
-			buscaEmProfundidadeVisit(i);
-		}
-	}
+    for(i = 0; i < vertice_inicio; i++) {
+        if (cores[i] == BRANCO) {
+            buscaEmProfundidadeVisit(i);
+        }
+    }
 
-	printOrdemAcesso();
-	printPredecessores();
+    printOrdemAcesso();
+    printPredecessores();
 
-	delete[] cores;
-	delete[] predecessores;
-	ordem.clear();
+    delete[] cores;
+    delete[] predecessores;
+    ordem.clear();
 }
 
 /**
@@ -263,46 +271,46 @@ void Grafo::buscaEmProfundidade(int vertice_inicio) {
  * @post ordem de visitação vértices impressa na saída padrão
  */
 void Grafo::buscaEmLargura(int vertice_inicio) {
-	int i;
-	std::queue<int> fila;
-	predecessores = new(std::nothrow) int[qnt_nos];
-	cores         = new(std::nothrow) cor[qnt_nos];
-	dist		  = new(std::nothrow) int[qnt_nos];
+    int i;
+    std::queue<int> fila;
+    predecessores = new(std::nothrow) int[qnt_nos];
+    cores         = new(std::nothrow) cor[qnt_nos];
+    dist		  = new(std::nothrow) int[qnt_nos];
 
-	// inicialização
-	for(i = 0; i < qnt_nos; i++) {
-		cores[i] = BRANCO;
-		predecessores[i] = NIL;
-		dist[i] = MAX_DIST;
-	}
-	cores[vertice_inicio] = CINZA;
-	dist[vertice_inicio] = 0;
-	fila.push(vertice_inicio);
-	ordem.push_back(vertice_inicio);
+    // inicialização
+    for(i = 0; i < qnt_nos; i++) {
+        cores[i] = BRANCO;
+        predecessores[i] = NIL;
+        dist[i] = MAX_DIST;
+    }
+    cores[vertice_inicio] = CINZA;
+    dist[vertice_inicio] = 0;
+    fila.push(vertice_inicio);
+    ordem.push_back(vertice_inicio);
 
-	int cabeca;
-	while(!fila.empty()) {
-		cabeca = fila.front();
-		for(auto it : grafo[cabeca]) { // eliminar copias
-			if (cores[it.id] == BRANCO) {
-				int salva_id = it.id;
-				cores[salva_id] = CINZA;
-				dist[salva_id] = dist[cabeca] + 1;
-				predecessores[salva_id] = cabeca;
-				fila.push(salva_id);
-				ordem.push_back(salva_id);
-			}
-		}
-		fila.pop();
-		cores[cabeca] = PRETO;
-	}
-	printOrdemAcesso();
-	printPredecessores();
+    int cabeca;
+    while(!fila.empty()) {
+        cabeca = fila.front();
+        for(auto it : grafo[cabeca]) { // eliminar copias
+            if (cores[it.id] == BRANCO) {
+                int salva_id = it.id;
+                cores[salva_id] = CINZA;
+                dist[salva_id] = dist[cabeca] + 1;
+                predecessores[salva_id] = cabeca;
+                fila.push(salva_id);
+                ordem.push_back(salva_id);
+            }
+        }
+        fila.pop();
+        cores[cabeca] = PRETO;
+    }
+    printOrdemAcesso();
+    printPredecessores();
 
-	delete[] cores;
-	delete[] dist;
-	delete[] predecessores;
-	ordem.clear();
+    delete[] cores;
+    delete[] dist;
+    delete[] predecessores;
+    ordem.clear();
 }
 
 /**
@@ -317,63 +325,63 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
  * @post Caminho impresso na tela
  */
 void Grafo::printCaminho(int inicio, int fim) {
-	if (inicio == fim) {
-		std::cout << inicio;
-	}
-	std::cout << fim << " - ";
-	printCaminho(inicio, predecessores[fim]);
+    if (inicio == fim) {
+        std::cout << inicio;
+    }
+    std::cout << fim << " - ";
+    printCaminho(inicio, predecessores[fim]);
 }
 
 bool Grafo::bellmanFord(int vertice_inicio) {
-	int i, qnt = 0;
-	bool ret = true;
-	predecessores = new int[qnt_nos];
-	dist		  = new int[qnt_nos];
+    int i, qnt = 0;
+    bool ret = true;
+    predecessores = new int[qnt_nos];
+    dist		  = new int[qnt_nos];
 
-	inicializaOrigem(vertice_inicio);
+    inicializaOrigem(vertice_inicio);
 
-	while (qnt < qnt_nos - 1) {
-		// percorre cada uma das arestas
-		for(i = 0; i < qnt_nos; i++) {
-			for(auto it : grafo[i]) {
-				relax(i, it.id);
-			}
-		}
-		qnt++;
-	}
+    while (qnt < qnt_nos - 1) {
+        // percorre cada uma das arestas
+        for(i = 0; i < qnt_nos; i++) {
+            for(auto it : grafo[i]) {
+                relax(i, it.id);
+            }
+        }
+        qnt++;
+    }
 
-	// percorre cada uma das arestas
-	for(i = 0; i < qnt_nos; i++) {
-		for (auto it : grafo[i]) {
-			if (dist[it.id] > dist[i] + it.peso) {
-				ret = false;
-				break;
-			}
-		}
-	}
+    // percorre cada uma das arestas
+    for(i = 0; i < qnt_nos; i++) {
+        for (auto it : grafo[i]) {
+            if (dist[it.id] > dist[i] + it.peso) {
+                ret = false;
+                break;
+            }
+        }
+    }
 
-	//if (ret) {
-		for(i = 0; i < qnt_nos; i++) {
-			std::cout << "caminho: ";
-			printCaminho(vertice_inicio, i);
-		}
-	//}else {
-		//std::cout << "O Grafo Possui ciclo negativo" << std::endl;
-	//}
-	//printPredecessores();
-	//printDist();
+    //if (ret) {
+    for(i = 0; i < qnt_nos; i++) {
+        std::cout << "caminho: ";
+        printCaminho(vertice_inicio, i);
+    }
+    //}else {
+    //std::cout << "O Grafo Possui ciclo negativo" << std::endl;
+    //}
+    //printPredecessores();
+    //printDist();
 
-	delete[] dist;
-	delete[] predecessores;
-	return ret;
+    delete[] dist;
+    delete[] predecessores;
+    return ret;
 }
 
 void kruskal(){
-	Aresta *arvore;
+    Aresta *arvore;
 
-	
 
-	
+
+
 }
 
 /**
@@ -383,9 +391,9 @@ void kruskal(){
  * @post Nenhuma
  */
 Grafo::~Grafo() {
-	for(int i = 0; i < this->qnt_nos; i++) {
-		grafo[i].clear();
-	}
-	delete []grafo;
-	debug("Destruindo um grafo\n");
+    for(int i = 0; i < this->qnt_nos; i++) {
+        grafo[i].clear();
+    }
+    delete []grafo;
+    debug("Destruindo um grafo\n");
 }

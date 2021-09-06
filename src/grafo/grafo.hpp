@@ -192,6 +192,8 @@ class Grafo {
          */
         void ordena();
 
+        int qntArestas();
+
         //----------------- Algorítimos de um grafo -----------------//
 
         /**
