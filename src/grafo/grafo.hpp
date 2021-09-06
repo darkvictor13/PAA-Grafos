@@ -21,6 +21,7 @@
 
 #include "no_grafo.hpp"
 #include "../utils/debug.hpp"
+#include "../lista/lista.hpp"
 
 /**
  * @brief enumera todas as cores possiveis que um vértice
@@ -61,7 +62,7 @@ class Grafo {
     private:
         bool isOrientado; /// booleano que indica se o grafo é orientado
         int qnt_nos;  /// inteiro que indica a quantidade de vértices do grafo
-        std::list<NoGrafo> *grafo;  /// vetor de listas de vértices
+        Lista<NoGrafo> *grafo;  /// vetor de listas de vértices
 
         cor *cores;  /// vetor de cores, alocado somente quando tem busca em
                      /// profundidade ou largura

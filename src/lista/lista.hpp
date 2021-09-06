@@ -64,6 +64,7 @@ class Lista {
         }
 
         void insereOrdenadoRec(No<T> *atual, T dado) {
+            debug("Tentando inserir " << dado << " atual " << atual->dado << std::endl);
             if (atual->dado >= dado) {
                 encadeia(atual->anterior, atual, dado);
             } else if (atual == cauda) {
@@ -81,6 +82,14 @@ class Lista {
 
         bool isVazia() {
             return (this->cabeca == nullptr);
+        }
+        
+        No<T> *inicio() {
+            return this->cabeca;
+        }
+
+        No<T> *fim() {
+            return this->cauda;
         }
 
         No<T>* prox( No<T> *p) {
@@ -107,7 +116,7 @@ class Lista {
             if (isVazia() || this->cabeca->dado >= dado) {
                 insereInicio(dado);
             } else {
-                insereOrdenadoRec(cabeca->proximo, dado);
+                insereOrdenadoRec(cabeca, dado);
             }
         }
 
@@ -197,12 +206,20 @@ class Lista {
             No<T> *p = cabeca;
             while(p != cauda) {
                 qnt++;
+                p = p->proximo;
             }
             return qnt;
         }
 
-        No<T>& acha() {
-
+        No<T>* acha(T dado) {
+            if (isVazia()) {
+                return nullptr;
+            }
+            No<T> *p = cabeca;
+            while(p && !(p->dado == dado)) {
+                p = p->proximo;
+            }
+            return p;
         }
 
         ~Lista() {

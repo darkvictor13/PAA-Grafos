@@ -5,7 +5,6 @@
 #include "lista/lista.hpp"
 #include "utils/debug.hpp"
 
-
 using namespace std;
 
 int main (int argc, char *argv[]) {
@@ -14,36 +13,35 @@ int main (int argc, char *argv[]) {
         filename = argv[1];
     }
 
-    Lista<int> l;
-    //l.insereInicio(*new NoGrafo(1, 1));
-    //l.insereInicio(*new NoGrafo(2, 2));
-    //l.insereInicio(*new NoGrafo(3, 3));
-    //l.insereInicio(*new NoGrafo(4, 4));
-    l.insereFim(1);
-    l.insereFim(2);
+    /*
+    Lista<NoGrafo> l;
+    //Lista<int> l;
+    l.insereOrdenado(*new NoGrafo(1, 1));
+    l.insereOrdenado(*new NoGrafo(3, 3));
+    l.insereOrdenado(*new NoGrafo(4, 4));
+    l.insereOrdenado(*new NoGrafo(2, 2));
+    //l.insereOrdenado(4);
+    //l.insereOrdenado(2);
+    //l.insereOrdenado(3);
+    //l.insereOrdenado(1);
     debug(l.tam() << '\n');
     l.mostrar();
     l.mostrarInvertido();
     l.retiraInicio();
+    l.retiraFim();
     l.mostrar();
     l.mostrarInvertido();
-    l.retiraFim();
+    */
 
-    /*
     Grafo g;
 
     g.ler(filename);
-    //g.ler("input");
-    g.ler();
-    cout << "Ola Mundo\n";
-    g.ordena();
     g.mostrar();
     cout << "\nBusca em Profundidade:\n";
     g.buscaEmProfundidade(3);
     cout << "\nBusca em largura:\n";
     g.buscaEmLargura(3);
-    cout << "\nBellMan-Ford:\n";
-    g.bellmanFord(3);
-    */
+    //cout << "\nBellMan-Ford:\n";
+    //g.bellmanFord(3);
     return 0;
 }

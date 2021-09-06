@@ -7,6 +7,7 @@
  */
 
 #include "grafo.hpp"
+#include "no_grafo.hpp"
 
 /**
  * @brief Construtor da classe Grafo
@@ -33,7 +34,7 @@ void Grafo::constroi(std::istream& file) {
     getline(file, line);
     qnt_nos = atoi((line.substr(line.find_first_of('=') + 1)).c_str());
 
-    this->grafo = new std::list<NoGrafo>[qnt_nos];
+    this->grafo = new Lista<NoGrafo>[qnt_nos];
 
     NoGrafo temp;
     int index;
@@ -41,10 +42,10 @@ void Grafo::constroi(std::istream& file) {
         temp.id = atoi(&line[line.find_first_of(',') + 1]);
         temp.peso = atoi(&line[line.find_first_of(':') + 1]);
         index = atoi(&line[1]);
-        grafo[index].push_back(temp);
+        grafo[index].insereOrdenado(temp);
         if (!isOrientado) {
 			std::swap(index, temp.id);
-            grafo[index].push_back(temp);
+            grafo[index].insereOrdenado(temp);
         }
     }
 }
@@ -93,13 +94,13 @@ void Grafo::inicializaOrigem(int origem) {
  * @post menor peso entre início e fim
  */
 void Grafo::relax(int inicio, int fim) {
-	auto elemento = std::find(grafo[inicio].begin(), grafo[inicio].end(), fim);
-	if (*elemento == fim) {
-		if (dist[fim] > (dist[inicio] + elemento->peso)) {
-			dist[fim] = dist[inicio] + elemento->peso;
-			predecessores[fim] = inicio;
-		}
-	}
+    //auto elemento = std::find(grafo[inicio].begin(), grafo[inicio].end(), fim);
+    auto *elemento = grafo[inicio].acha(*new NoGrafo(fim, 0));
+    if (!elemento) return;
+    if (dist[fim] > (dist[inicio] + elemento->dado.peso)) {
+        dist[fim] = dist[inicio] + elemento->dado.peso;
+        predecessores[fim] = inicio;
+    }
 }
 
 /**
@@ -122,10 +123,12 @@ void Grafo::ler() {
 void Grafo::mostrar() {
 	for (int i = 0; i < this->qnt_nos; i++) {
 		std::cout << "Arestas que saem de " << i << ": ";
-		for (auto const &iterator : grafo[i]) {
-			std::cout << iterator << ' ';
-		}
-		std::cout << '\n';
+        grafo[i].mostrar();
+
+		//for (auto const &iterator : grafo[i]) {
+			//std::cout << iterator << ' ';
+		//}
+		//std::cout << '\n';
 	}
 }
 
@@ -138,14 +141,14 @@ void Grafo::mostrar() {
  */
 void Grafo::ordena() {
 	for(int i = 0; i < qnt_nos; i++) {
-		grafo[i].sort();
+		//grafo[i].sort();
 	}
 }
 
 int Grafo::qntArestas() {
     int qnt = 0;
     for (int i = 0; i < qnt_nos; i++) {
-        //qnt += grafo[i].tam();
+        qnt += grafo[i].tam();
     }
     return qnt;
 }
@@ -212,10 +215,11 @@ void Grafo::buscaEmProfundidadeVisit(int index) {
     debug('\n');
     ordem.push_back(index);
     cores[index] = CINZA;
-    for(auto it : grafo[index]) { // eliminar copias
-        if(cores[it.id] == BRANCO) {
-            predecessores[it.id] = index;
-            buscaEmProfundidadeVisit(it.id);
+    //for(auto it : grafo[index]) {
+    for(auto it = grafo[index].inicio(); it; it = it->proximo) {
+        if(cores[it->dado.id] == BRANCO) {
+            predecessores[it->dado.id] = index;
+            buscaEmProfundidadeVisit(it->dado.id);
         }
     }
     cores[index] = PRETO;
@@ -272,7 +276,8 @@ void Grafo::buscaEmProfundidade(int vertice_inicio) {
  */
 void Grafo::buscaEmLargura(int vertice_inicio) {
     int i;
-    std::queue<int> fila;
+    //std::queue<int> fila;
+    Lista<int> fila;
     predecessores = new(std::nothrow) int[qnt_nos];
     cores         = new(std::nothrow) cor[qnt_nos];
     dist		  = new(std::nothrow) int[qnt_nos];
@@ -285,23 +290,26 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
     }
     cores[vertice_inicio] = CINZA;
     dist[vertice_inicio] = 0;
-    fila.push(vertice_inicio);
+    fila.insereFim(vertice_inicio);
     ordem.push_back(vertice_inicio);
 
     int cabeca;
-    while(!fila.empty()) {
-        cabeca = fila.front();
-        for(auto it : grafo[cabeca]) { // eliminar copias
-            if (cores[it.id] == BRANCO) {
-                int salva_id = it.id;
+    //while(!fila.empty()) {
+    while(!fila.isVazia()) {
+        //cabeca = fila.front();
+        cabeca = fila.inicio()->dado;
+        //for(auto it : grafo[cabeca]) { // eliminar copias
+        for(auto it = grafo[cabeca].inicio(); it; it = it->proximo) {
+            if (cores[it->dado.id] == BRANCO) {
+                int salva_id = it->dado.id;
                 cores[salva_id] = CINZA;
                 dist[salva_id] = dist[cabeca] + 1;
                 predecessores[salva_id] = cabeca;
-                fila.push(salva_id);
+                fila.insereFim(salva_id);
                 ordem.push_back(salva_id);
             }
         }
-        fila.pop();
+        fila.retiraInicio();
         cores[cabeca] = PRETO;
     }
     printOrdemAcesso();
@@ -343,21 +351,21 @@ bool Grafo::bellmanFord(int vertice_inicio) {
     while (qnt < qnt_nos - 1) {
         // percorre cada uma das arestas
         for(i = 0; i < qnt_nos; i++) {
-            for(auto it : grafo[i]) {
-                relax(i, it.id);
-            }
+            //for(auto it : grafo[i]) {
+                //relax(i, it.id);
+            //}
         }
         qnt++;
     }
 
     // percorre cada uma das arestas
     for(i = 0; i < qnt_nos; i++) {
-        for (auto it : grafo[i]) {
-            if (dist[it.id] > dist[i] + it.peso) {
-                ret = false;
-                break;
-            }
-        }
+        //for (auto it : grafo[i]) {
+            //if (dist[it.id] > dist[i] + it.peso) {
+                //ret = false;
+                //break;
+            //}
+        //}
     }
 
     //if (ret) {
@@ -391,9 +399,6 @@ void kruskal(){
  * @post Nenhuma
  */
 Grafo::~Grafo() {
-    for(int i = 0; i < this->qnt_nos; i++) {
-        grafo[i].clear();
-    }
     delete []grafo;
     debug("Destruindo um grafo\n");
 }

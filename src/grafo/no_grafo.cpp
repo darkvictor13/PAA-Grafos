@@ -63,6 +63,24 @@ bool NoGrafo::operator==(int other) {
 }
 
 /**
+ * @brief Sobrecarga do operador < necessária para std::find
+ * 
+ * faz a comparação a partir do id do vértice
+ * @param other o outro no
+ * @return true se other é igual ao id do vertice
+ * @return false se other é diferente ao id do vertice
+ * @pre Nenhuma
+ * @post Nenhuma
+ */
+bool NoGrafo::operator == (const NoGrafo &other) {
+    return this->id == other.id;
+}
+
+bool NoGrafo::operator >= (const NoGrafo &other) {
+    return this->id >= other.id;
+}
+
+/**
  * @brief Sobrecarga do operador < necessária para impressão em stream
  *
  * @param out stream para escrita, podendo ser um arquivo ou o terminal
@@ -73,7 +91,8 @@ bool NoGrafo::operator==(int other) {
  * @post Nenhuma
  */
 std::ostream& operator << (std::ostream &out, const NoGrafo& other) {
-    out << '[' << other.id << ", " << other.peso << ']';
+    //out << '[' << other.id << ", " << other.peso << ']';
+    out << '[' << other.id << ']';
     return out;
 }
 
