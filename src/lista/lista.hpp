@@ -83,6 +83,14 @@ class Lista {
             return (this->cabeca == nullptr);
         }
 
+        No<T>* prox( No<T> *p) {
+            return p->proximo;
+        }
+
+        No<T>* ant( No<T> *p) {
+            return p->anterior;
+        }
+
         void insereInicio(T dado) {
             No<T> *novo = new No<T>(dado);
             if (isVazia()) {
@@ -179,6 +187,18 @@ class Lista {
                 percorre = percorre->anterior;
             }
             std::cout << percorre->dado << '\n';
+        }
+
+        int tam() {
+            if (isVazia()) {
+                return 0;
+            }
+            int qnt = 1;
+            No<T> *p = cabeca;
+            while(p != cauda) {
+                qnt++;
+            }
+            return qnt;
         }
 
         No<T>& acha() {

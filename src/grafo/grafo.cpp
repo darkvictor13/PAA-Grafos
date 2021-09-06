@@ -142,6 +142,14 @@ void Grafo::ordena() {
 	}
 }
 
+int Grafo::qntArestas() {
+    int qnt = 0;
+    for (int i = 0; i < qnt_nos; i++) {
+        //qnt += grafo[i].tam();
+    }
+    return qnt;
+}
+
 /**
  * @brief Imprime a lista que contém a ordem de acesso dos vertices
  *
