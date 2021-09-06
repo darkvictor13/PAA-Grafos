@@ -15,9 +15,9 @@
  * @post Nenhuma
  */
 NoGrafo::NoGrafo() {
-	debug("Construindo um No, sem parametros\n");
-	this->id = 0;
-	this->peso = 0;
+    debug("Construindo um No, sem parametros\n");
+    this->id = 0;
+    this->peso = 0;
 }
 
 /**
@@ -29,9 +29,9 @@ NoGrafo::NoGrafo() {
  * @post Nenhuma
  */
 NoGrafo::NoGrafo(int id, int peso) {
-	debug("Construindo um No, com parametros\n");
-	this->id = id;
-	this->peso = peso;
+    debug("Construindo um No, com parametros\n");
+    this->id = id;
+    this->peso = peso;
 }
 
 /**
@@ -45,7 +45,7 @@ NoGrafo::NoGrafo(int id, int peso) {
  * @post Nenhuma
  */
 bool NoGrafo::operator<(const NoGrafo& other) {
-	return this->id < other.id;
+    return this->id < other.id;
 }
 
 /**
@@ -59,7 +59,7 @@ bool NoGrafo::operator<(const NoGrafo& other) {
  * @post Nenhuma
  */
 bool NoGrafo::operator==(int other) {
-	return this->id == other;
+    return this->id == other;
 }
 
 /**
@@ -73,8 +73,8 @@ bool NoGrafo::operator==(int other) {
  * @post Nenhuma
  */
 std::ostream& operator << (std::ostream &out, const NoGrafo& other) {
-	out << '[' << other.id << ", " << other.peso << ']';
-	return out;
+    out << '[' << other.id << ", " << other.peso << ']';
+    return out;
 }
 
 /**
@@ -84,5 +84,5 @@ std::ostream& operator << (std::ostream &out, const NoGrafo& other) {
  * @post Nenhuma
  */
 NoGrafo::~NoGrafo() {
-	debug("Destruindo o No\n");
+    debug("Destruindo o No\n");
 }
