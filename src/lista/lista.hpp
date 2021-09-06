@@ -117,9 +117,11 @@ class Lista {
         }
 
         void retiraFim() {
-            if (isVazia()) return ;
+            //if (isVazia()) return ;
 
+            /*
             No<T> *salva_cauda = this->cauda;
+            this->cauda->anterior->proximo = nullptr;
             this->cauda = this->cauda->anterior;
             if (this->cauda == nullptr) {
                 cabeca = cauda = nullptr;
@@ -128,6 +130,16 @@ class Lista {
             }
 
             salva_cauda->anterior = nullptr;
+            debug("Antes do if\n");
+            if (this->cauda->proximo == nullptr
+                    && this->cauda->anterior == nullptr) {
+                this->cabeca = cauda;
+            }
+            debug("Depois do if\n");
+            delete salva_cauda;
+            */
+            No<T> *salva_cauda = this->cauda;
+            this->cauda = this->cauda->anterior;
             delete salva_cauda;
         }
 
@@ -144,6 +156,10 @@ class Lista {
             }
 
             salva_cabeca->proximo = nullptr;
+            if (this->cabeca->proximo == nullptr
+                    && this->cabeca->anterior == nullptr) {
+                this->cauda = cabeca;
+            }
             delete salva_cabeca;
         }
 
