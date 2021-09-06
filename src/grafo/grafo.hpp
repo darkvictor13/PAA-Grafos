@@ -46,6 +46,10 @@ enum cor {
  */
 #define MAX_DIST ((INT_MAX/2) - 1)
 
+struct Aresta{
+    int  inicio, fim, peso;
+};
+
 /**
  * @brief Classe que representa um único grafo,
  * que sabe encapsula todos os métodos necessários
@@ -187,8 +191,6 @@ class Grafo {
          * @post cada lista do grafo está ordenada
          */
         void ordena();
-
-        int qntArestas();
 
         //----------------- Algorítimos de um grafo -----------------//
 
