@@ -112,7 +112,7 @@ void Grafo::inicializaOrigem(int origem) {
  */
 bool Grafo::relax(const int inicio, const int fim, const int peso) {
     //debug("Comparando " << dist[fim] << " > " << dist[inicio] << " + " << peso
-            //<< std::endl);
+    //<< std::endl);
     if (dist[fim] > (dist[inicio] + peso)) {
         debug("Entrei no if de mudar\n");
         dist[fim] = dist[inicio] + peso;
