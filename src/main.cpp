@@ -16,15 +16,8 @@ int main (int argc, char *argv[]) {
         arq = argv[1];
         g.ler(arq);
     }
+    MenuPrincipal menu (&g);
+    menu.loop();
 
-    /*
-    cout << "\nBusca em Profundidade:\n";
-    g.buscaEmProfundidade(3);
-    cout << "\nBusca em largura:\n";
-    g.buscaEmLargura(3);
-    cout << "\nBellMan-Ford:\n";
-    g.bellmanFord(3);
-    */
-    cout << "\nKruskal:\n";
     return 0;
 }
