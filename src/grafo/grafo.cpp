@@ -110,14 +110,16 @@ void Grafo::inicializaOrigem(int origem) {
  * com suas estruturas alocadas
  * @post menor peso entre início e fim
  */
-void Grafo::relax(const int inicio, const int fim, const int peso) {
-    debug("Comparando " << dist[fim] << " > " << dist[inicio] << " + " << peso
-                        << std::endl);
+bool Grafo::relax(const int inicio, const int fim, const int peso) {
+    //debug("Comparando " << dist[fim] << " > " << dist[inicio] << " + " << peso
+            //<< std::endl);
     if (dist[fim] > (dist[inicio] + peso)) {
         debug("Entrei no if de mudar\n");
         dist[fim] = dist[inicio] + peso;
         predecessores[fim] = inicio;
+        return true;
     }
+    return false;
 }
 
 /**
@@ -263,7 +265,6 @@ void Grafo::buscaEmProfundidade(int vertice_inicio) {
     }
 
     printOrdemAcesso();
-    printPredecessores();
 
     delete[] cores;
     delete[] predecessores;
@@ -298,11 +299,8 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
     ordem.push_back(vertice_inicio);
 
     int cabeca;
-    //while(!fila.empty()) {
     while(!fila.isVazia()) {
-        //cabeca = fila.front();
         cabeca = fila.inicio()->dado;
-        //for(auto it : grafo[cabeca]) { // eliminar copias
         for(auto it = grafo[cabeca].inicio(); it; it = it->proximo) {
             if (cores[it->dado.id] == BRANCO) {
                 int salva_id = it->dado.id;
@@ -317,178 +315,191 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
         cores[cabeca] = PRETO;
     }
     printOrdemAcesso();
-    printPredecessores();
 
     delete[] cores;
     delete[] dist;
     delete[] predecessores;
     ordem.clear();
+}
+
+/**
+ * @brief Utilizado para mostrar na tela o caminho de um
+ * vertice origem até um vertice fim utilizando a lista de
+ * predecessores
+ *
+ * Utilizado no algoritimo de BellMan-Ford
+ * @param inicio vertice que inicia o caminho
+ * @param fim vertice que acaba o caminho
+ * @pre vetor de predecessores alocado
+ * @post Caminho impresso na tela
+ */
+void Grafo::printCaminho(int inicio, int fim) {
+    if (inicio == fim) {
+        std::cout << fim;
+        return;
     }
+    printCaminho(predecessores[inicio], fim);
+    std::cout << " - " << inicio;
+}
 
-    /**
-     * @brief Utilizado para mostrar na tela o caminho de um
-     * vertice origem até um vertice fim utilizando a lista de
-     * predecessores
-     *
-     * Utilizado no algoritimo de BellMan-Ford
-     * @param inicio vertice que inicia o caminho
-     * @param fim vertice que acaba o caminho
-     * @pre vetor de predecessores alocado
-     * @post Caminho impresso na tela
-     */
-    void Grafo::printCaminho(int inicio, int fim) {
-        if (inicio == fim) {
-            std::cout << inicio;
-        }
-        std::cout << fim << " - ";
-        printCaminho(inicio, predecessores[fim]);
+int Grafo::getDistCaminho(int inicio, int fim) {
+    if (inicio == fim) {
+        return 0;
     }
+    return dist[inicio] +
+        getDistCaminho(predecessores[inicio], fim);
+}
 
-    bool Grafo::bellmanFord(int vertice_inicio) {
-        int i, qnt;
-        bool ret = true;
-        predecessores = new int[qnt_nos];
-        dist		  = new int[qnt_nos];
+bool Grafo::bellmanFord(int vertice_inicio) {
+    int i, qnt;
+    bool ret;
+    predecessores = new int[qnt_nos];
+    dist		  = new int[qnt_nos];
 
-        inicializaOrigem(vertice_inicio);
+    inicializaOrigem(vertice_inicio);
 
-        //printDist();
-        for (qnt = 0; qnt < (qnt_nos - 3); qnt++) {
-            // percorre cada uma das arestas
-            for(i = 0; i < qnt_nos; i++) {
-                for(auto it = grafo[i].inicio(); it; it = it->proximo) {
-                    relax(i, it->dado.id, it->dado.peso);
-                }
-                //printDist();
-            }
-            qnt++;
-        }
-
-        printDist();
-        printPredecessores();
-
+    for (qnt = 0; qnt < (qnt_nos - 2); qnt++) {
+        debug("Iniciando uma nova intercao\n");
+        ret = false;
         // percorre cada uma das arestas
-        //for(i = 0; i < qnt_nos; i++) {
-            //for (auto it : grafo[i]) {
-            //if (dist[it.id] > dist[i] + it.peso) {
-            //ret = false;
-            //break;
-            //}
-            //}
-        //}
-
-        //if (ret) {
         for(i = 0; i < qnt_nos; i++) {
-            std::cout << "caminho: ";
-            //printCaminho(vertice_inicio, i);
-        }
-        //}else {
-        //std::cout << "O Grafo Possui ciclo negativo" << std::endl;
-        //}
-        //printPredecessores();
-        //printDist();
-
-        delete[] dist;
-        delete[] predecessores;
-        return ret;
-    }
-
-    bool Grafo::existeSimetrico(Aresta *v, int tam, Aresta &dado) {
-        for (int i = 0; i < tam; i++) {
-            if (v[i].isSimetrica(dado)) {
-                return true;
+            for(auto it = grafo[i].inicio(); it; it = it->proximo) {
+                if (relax(i, it->dado.id, it->dado.peso)) {
+                    ret = true;
+                }
             }
         }
-        return false;
+        // se nao teve nenhum relax nessa interação por todas as arestas
+        if (!ret) {
+            break;
+        }
     }
 
-    void Grafo::kruskal() {
-        Aresta *arvore;
-        Lista<int> *p;
-        Lista<Aresta> A;
-        Lista<Lista<int>*> conjuntoV;
-        Lista<int> *conj_u, *conj_v;
-        int i, c, peso;
-        int qnt_aresta = this->qntArestas();
-        if (!this->isOrientado) {
-            qnt_aresta /= 2;
+    // percorre cada uma das arestas
+    ret = true;
+    for(i = 0; i < qnt_nos; i++) {
+        for (auto it = grafo[i].inicio(); it; it = it->proximo) {
+            if (dist[it->dado.id] > dist[i] + it->dado.peso) {
+                ret = false;
+                break;
+            }
         }
-        arvore = new Aresta[qnt_aresta];
+    }
 
-        //conjunto (v)
-        for(i=0;i<qnt_nos;i++) {
-            p = new Lista<int>;
-            p->insereFim(i);
-            conjuntoV.insereFim(p);
-            p = nullptr;
+    if (ret) {
+        for(i = 0; i < qnt_nos; i++) {
+            std::cout   << "destino: " << i << ' '
+                << "dist: " << getDistCaminho(i, vertice_inicio) << ' '
+                << "caminho: ";
+
+            printCaminho(i, vertice_inicio);
+            std::cout << std::endl;
         }
-        // inserir as coisas Usando isSimetrica
-        //inserindo todas as arestas para ordenar
-        debug("\narestas de E\n");
-        for(i = c = 0; i < qnt_nos; i++) {
-            for (auto it = grafo[i].inicio(); it; it = it->proximo) {
-                Aresta inserir(i, it->dado.id, it->dado.peso);
-                if (!this->existeSimetrico(arvore, c, inserir)) {
-                    arvore[c++] = inserir;
+    }else {
+        std::cout << "O Grafo Possui ciclo negativo" << std::endl;
+    }
+
+    delete[] dist;
+    delete[] predecessores;
+    return ret;
+}
+
+bool Grafo::existeSimetrico(Aresta *v, int tam, Aresta &dado) {
+    for (int i = 0; i < tam; i++) {
+        if (v[i].isSimetrica(dado)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Grafo::kruskal() {
+    Aresta *arvore;
+    Lista<int> *p;
+    Lista<Aresta> A;
+    Lista<Lista<int>*> conjuntoV;
+    Lista<int> *conj_u, *conj_v;
+    int i, c, peso;
+    int qnt_aresta = this->qntArestas();
+    if (!this->isOrientado) {
+        qnt_aresta /= 2;
+    }
+    arvore = new Aresta[qnt_aresta];
+
+    //conjunto (v)
+    for(i=0;i<qnt_nos;i++) {
+        p = new Lista<int>;
+        p->insereFim(i);
+        conjuntoV.insereFim(p);
+        p = nullptr;
+    }
+    // inserir as coisas Usando isSimetrica
+    //inserindo todas as arestas para ordenar
+    debug("\narestas de E\n");
+    for(i = c = 0; i < qnt_nos; i++) {
+        for (auto it = grafo[i].inicio(); it; it = it->proximo) {
+            Aresta inserir(i, it->dado.id, it->dado.peso);
+            if (!this->existeSimetrico(arvore, c, inserir)) {
+                arvore[c++] = inserir;
+            }
+        }
+    }
+
+    debug("arestas ordenadas em ordem nao decrescente\n");
+    selectionSort(arvore, c);
+
+    for(i = 0; i < c; i++) {
+        debug(arvore[i] << std::endl);
+    }
+
+    conj_u = conj_v = nullptr;
+    for (i = peso = 0; i < qnt_aresta; i++) {
+        debug("Antes do for mais interno\n");
+        for (auto per = conjuntoV.inicio(); per; per = per->proximo) {
+            debug("Dentro do for\n");
+            if (!conj_u) {
+                if (per->dado->acha(arvore[i].inicio)) {
+                    conj_u = per->dado;
+                }
+            }
+            if (!conj_v) {
+                if (per->dado->acha(arvore[i].fim)) {
+                    conj_v = per->dado;
                 }
             }
         }
 
-        debug("arestas ordenadas em ordem nao decrescente\n");
-        selectionSort(arvore, c);
-
-        for(i = 0; i < c; i++) {
-            debug(arvore[i] << std::endl);
+        if (conj_u && conj_v && (conj_u != conj_v)) {
+            debug("Entrei no if de inserir\n");
+            for (auto p = conj_v->inicio(); p; p = p->proximo) {
+                conj_u->insereFim(p->dado);
+            }
+            for (auto it = conjuntoV.inicio(); it; it = it->proximo) {
+                if (!(it->dado != conj_v)) {
+                    conjuntoV.desencadeia(it);
+                    break;
+                }
+            }
+            peso += arvore[i].peso;
+            A.insereFim(arvore[i]);
         }
-
+        debug("conjunto(v)\n\n");
         conj_u = conj_v = nullptr;
-        for (i = peso = 0; i < qnt_aresta; i++) {
-            debug("Antes do for mais interno\n");
-            for (auto per = conjuntoV.inicio(); per; per = per->proximo) {
-                debug("Dentro do for\n");
-                if (!conj_u) {
-                    if (per->dado->acha(arvore[i].inicio)) {
-                        conj_u = per->dado;
-                    }
-                }
-                if (!conj_v) {
-                    if (per->dado->acha(arvore[i].fim)) {
-                        conj_v = per->dado;
-                    }
-                }
-            }
-
-            if (conj_u && conj_v && (conj_u != conj_v)) {
-                debug("Entrei no if de inserir\n");
-                for (auto p = conj_v->inicio(); p; p = p->proximo) {
-                    conj_u->insereFim(p->dado);
-                }
-                for (auto it = conjuntoV.inicio(); it; it = it->proximo) {
-                    if (!(it->dado != conj_v)) {
-                        conjuntoV.desencadeia(it);
-                        break;
-                    }
-                }
-                peso += arvore[i].peso;
-                A.insereFim(arvore[i]);
-            }
-            debug("conjunto(v)\n\n");
-            conj_u = conj_v = nullptr;
-            debug("Acabei o for\n");
-        }
-
-        std::cout << "peso total: " << peso << "\narestas: ";
-        A.mostrar();
-        delete[] arvore;
+        debug("Acabei o for\n");
     }
 
-    /**
-     * @brief Destrutor da classe Grafo
-     *
-     * @pre Nenhuma
-     * @post Nenhuma
-     */
-    Grafo::~Grafo() {
-        delete []grafo;
-        debug("Destruindo um grafo\n");
-    }
+    std::cout << "peso total: " << peso << "\narestas: ";
+    A.mostrar();
+    delete[] arvore;
+}
+
+/**
+ * @brief Destrutor da classe Grafo
+ *
+ * @pre Nenhuma
+ * @post Nenhuma
+ */
+Grafo::~Grafo() {
+    delete []grafo;
+    debug("Destruindo um grafo\n");
+}

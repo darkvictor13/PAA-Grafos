@@ -132,6 +132,8 @@ class Grafo {
          */
         void printCaminho(int inicio, int fim);
 
+        int getDistCaminho(int inicio, int fim);
+
         /**
          * @brief Inicializa o vertice de origem
          *
@@ -152,7 +154,7 @@ class Grafo {
          * com suas estruturas alocadas
          * @post menor peso entre início e fim
          */
-        void relax(const int inicio, const int fim, const int peso);
+        bool relax(const int inicio, const int fim, const int peso);
 
         // somente utilizado para kruskal
         bool existeSimetrico(Aresta *v, int tam, Aresta &dado);
