@@ -49,6 +49,17 @@ enum cor {
 
 struct Aresta{
     int  inicio, fim, peso;
+    bool operator<(const Aresta &other) {
+        return this->peso < other.peso;
+    }
+    bool operator>(const Aresta &other) {
+        return this->peso > other.peso;
+    }
+
+    bool isSimetrica(const Aresta &other) {
+        return this->inicio == other.fim &&
+                this->fim   == other.inicio;
+    }
 };
 
 /**

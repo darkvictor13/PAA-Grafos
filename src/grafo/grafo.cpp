@@ -384,9 +384,41 @@ bool Grafo::bellmanFord(int vertice_inicio) {
     return ret;
 }
 
-void kruskal(){
+void Grafo::kruskal(){
     Aresta *arvore;
-
+    int qnt_aresta = this->qntArestas();
+    arvore = new Aresta[qnt_aresta];
+    Lista<int> aux;
+    Lista<Aresta> A;
+    Lista<Lista<int>> conjuntoV;
+    Lista<int> l_inicio;
+    Lista<int> l_fim;
+    for(int i=0;i<qnt_nos;i++){
+        aux.insereFim(i);
+        conjuntoV.insereFim(aux);
+        aux.retiraFim();
+    }
+    // inserir as coisas Usando isSimetrica
+    std::sort(arvore, arvore+qnt_aresta);
+    for (int i = 0; i < qnt_aresta; i++) {
+        //if (conjuntoV.acha(conjuntoV.naPos(arvore[i].inicio)->dado)) {
+        //if (conjuntoV.naPos(arvore[i].inicio) != conjuntoV.naPos(arvore[i].fim)) {
+        aux = conjuntoV.inicio()->dado;
+        for (int c = 0; !aux.acha(arvore[i].inicio); c++) {
+            aux = conjuntoV.naPos(c)->dado;
+        }
+        l_inicio = aux;
+        aux = conjuntoV.inicio()->dado;
+        for (int c = 0; !aux.acha(arvore[i].inicio); c++) {
+            aux = conjuntoV.naPos(c)->dado;
+        }   
+        l_fim = aux;
+        if (l_inicio != l_fim) {
+            A.insereFim(arvore[i]);
+        }
+        
+    }
+    
 
 
 

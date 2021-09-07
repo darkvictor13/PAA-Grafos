@@ -84,6 +84,19 @@ class Lista {
             return (this->cabeca == nullptr);
         }
 
+        No<T>* naPos(int num) {
+            int pos = 0;
+            No<T> *p = this->cabeca;
+            while (p) {
+                if (pos == num) {
+                    return p;
+                }
+                pos++;
+                p = p->proximo;
+            }
+            return nullptr;
+        }
+
         bool operator != (const Lista<T> &other) {
             No<T> *atual = this->cabeca;
             No<T> *outra = other->cabeca;
@@ -93,6 +106,10 @@ class Lista {
                 }
             }
             return true;
+        }
+
+        bool operator == (const Lista<T> &other) {
+            return !(this != other);
         }
         
         No<T> *inicio() {
