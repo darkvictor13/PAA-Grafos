@@ -4,34 +4,19 @@
 #include "grafo/no_grafo.hpp"
 #include "lista/lista.hpp"
 #include "utils/debug.hpp"
+#include "menu/menu_principal.hpp"
 
 using namespace std;
 
 int main (int argc, char *argv[]) {
-    string filename;
+    Grafo g;
+    string arq;
+    char entrada;
     if (argc == 2) {
-        filename = argv[1];
+        arq = argv[1];
+        g.ler(arq);
     }
 
-    /*
-    Lista<NoGrafo> l;
-    //Lista<int> l;
-    l.insereOrdenado(*new NoGrafo(1, 1));
-    l.insereOrdenado(*new NoGrafo(3, 3));
-    l.insereOrdenado(*new NoGrafo(4, 4));
-    l.insereOrdenado(*new NoGrafo(2, 2));
-    //l.insereOrdenado(4);
-    //l.insereOrdenado(2);
-    //l.insereOrdenado(3);
-    //l.insereOrdenado(1);
-    l.mostrar();
-    l.mostrar();
-    */
-
-    Grafo g;
-
-    g.ler(filename);
-    g.mostrar();
     /*
     cout << "\nBusca em Profundidade:\n";
     g.buscaEmProfundidade(3);
@@ -41,6 +26,5 @@ int main (int argc, char *argv[]) {
     g.bellmanFord(3);
     */
     cout << "\nKruskal:\n";
-    g.kruskal();
     return 0;
 }

@@ -5,7 +5,7 @@ LIBS=-std=c++17 -O2 -lm
 
 CAMINHO=../src/
 
-SRC=$(CAMINHO)main.cpp $(CAMINHO)grafo/*.cpp
+SRC=$(CAMINHO)main.cpp $(CAMINHO)grafo/*.cpp $(CAMINHO)menu/*.cpp
 
 # como compila o programa
 release:
