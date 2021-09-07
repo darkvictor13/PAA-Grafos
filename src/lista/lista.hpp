@@ -243,7 +243,7 @@ class Lista {
                 std::cout << percorre->dado << ' ';
                 percorre = percorre->proximo;
             }
-            std::cout << percorre->dado << '\n';
+            std::cout << percorre->dado << "\n";
         }
 
         void mostrarInvertido() {

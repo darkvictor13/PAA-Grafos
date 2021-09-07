@@ -402,7 +402,7 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
         return false;
     }
 
-    void Grafo::kruskal() {
+        void Grafo::kruskal() {
         Aresta *arvore;
         int i, c, peso;
         int qnt_aresta = this->qntArestas();
@@ -414,17 +414,21 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
         Lista<int> l_inicio;
         Lista<int> l_fim;
 
+        //conjunto (v)
         for(i=0;i<qnt_nos;i++) {
             p = new Lista<int>;
             p->insereFim(i);
             conjuntoV.insereFim(p);
             p = nullptr;
         }
-
+        //print
+        debug("conjunto(v)\n\n");
         for(i = 0; i < qnt_nos; i++) {
             conjuntoV.naPos(i)->dado->mostrar();
         }
         // inserir as coisas Usando isSimetrica
+        //inserindo todas as arestas para ordenar
+        debug("\narestas de E\n");
         for(i = c = 0; i < qnt_nos; i++) {
             for (auto it = grafo[i].inicio(); it; it = it->proximo) {
                 Aresta inserir(i, it->dado.id, it->dado.peso);
@@ -433,12 +437,14 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
                 }
             }
         }
-
+        //print
         for(i = 0; i < c; i++) {
             debug(arvore[i] << std::endl);
         }
+        debug("\n\n");
 
         //std::stable_sort(arvore, (arvore + qnt_aresta));
+        debug("arestas ordenadas em ordem nao decrescente\n");
         selectionSort(arvore, c);
 
         for(i = 0; i < c; i++) {
@@ -458,7 +464,14 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
                }   
                l_fim = aux;
                */
-            if (!A.acha(arvore[i]) && !A.acha(*(new Aresta (arvore[i].fim, arvore[i].inicio, arvore[i].peso)))) {
+            
+            //arvore tem os vertices ordenados pelas arestas
+            //conjunto v tem os vertices em listas de listas
+            auto conjU = conjuntoV.naPos(i);
+            int conjV = arvore[i].fim;
+
+            //!A.acha(arvore[i]) && !A.acha(*(new Aresta (arvore[i].fim, arvore[i].inicio, arvore[i].peso)))
+            if (conjU != conjV) {
                 peso += arvore[i].peso;
                 A.insereFim(arvore[i]);
             }
