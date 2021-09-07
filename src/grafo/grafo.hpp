@@ -48,12 +48,45 @@ enum cor {
 #define MAX_DIST ((INT_MAX/2) - 1)
 
 struct Aresta{
-    int  inicio, fim, peso;
+    int inicio, fim, peso;
+
+    Aresta(int inicio, int fim, int peso) {
+        this->inicio = inicio;
+        this->fim = fim;
+        this->peso = peso;
+    }
+
+    Aresta() {
+        this->inicio = 0;
+        this->fim = 0;
+        this->peso = 0;
+    }
+
     bool operator<(const Aresta &other) {
         return this->peso < other.peso;
     }
-    bool operator>(const Aresta &other) {
-        return this->peso > other.peso;
+
+    bool operator==(const Aresta &other) {
+        return  peso    == other.peso   &&
+                inicio  == other.inicio &&
+                fim     == other.fim;
+    }
+
+    friend bool operator < (const Aresta &eu, const Aresta &outro) {
+        return eu.peso < outro.peso;
+    }
+
+    //bool operator<(Aresta other) {
+        //return this->peso < other.peso;
+    //}
+
+    //bool operator>(const Aresta &other) {
+        //return this->peso > other.peso;
+    //}
+
+	friend std::ostream& operator << (std::ostream &out, const Aresta &other) {
+        out << '(' << other.inicio << ',' << other.fim << ')';
+        return out;
     }
 
     bool isSimetrica(const Aresta &other) {
@@ -61,6 +94,19 @@ struct Aresta{
                 this->fim   == other.inicio;
     }
 };
+
+template<class T> void selectionSort(T *v, int tam) {
+    int i, j, menor;
+    for(i = 0; i < tam; i++) {
+        menor = i;
+        for(j = i + 1; j < tam; j++) {
+            if (v[j] < v[menor]) {
+                menor = j;
+            }
+        }
+        std::swap(v[i], v[menor]);
+    }
+}
 
 /**
  * @brief Classe que representa um único grafo,
@@ -159,6 +205,9 @@ class Grafo {
          * @post menor peso entre início e fim
          */
         void relax(int inicio, int fim);
+
+        // somente utilizado para kruskal
+        bool existeSimetrico(Aresta *v, int tam, Aresta &dado);
 
     public:
         /**

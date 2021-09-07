@@ -8,6 +8,9 @@
 
 #include "grafo.hpp"
 #include "no_grafo.hpp"
+#include <algorithm>
+#include <iostream>
+#include <iterator>
 
 /**
  * @brief Construtor da classe Grafo
@@ -16,7 +19,7 @@
  * @post Nenhuma
  */
 Grafo::Grafo() {
-	debug("Construindo um grafo\n");
+    debug("Construindo um grafo\n");
 }
 
 /**
@@ -44,7 +47,7 @@ void Grafo::constroi(std::istream& file) {
         index = atoi(&line[1]);
         grafo[index].insereOrdenado(temp);
         if (!isOrientado) {
-			std::swap(index, temp.id);
+            std::swap(index, temp.id);
             grafo[index].insereOrdenado(temp);
         }
     }
@@ -62,9 +65,9 @@ void Grafo::ler(std::string filename) {
     std::ifstream file;
     file.open(filename);
 
-	constroi(file);
-	
-	file.close();
+    constroi(file);
+
+    file.close();
 }
 
 /**
@@ -76,11 +79,11 @@ void Grafo::ler(std::string filename) {
  * inicializadas
  */
 void Grafo::inicializaOrigem(int origem) {
-	for(int i = 0; i < qnt_nos; i++) {
-		predecessores[i] = NIL;
-		dist[i] = MAX_DIST;
-	}
-	dist[origem] = 0;
+    for(int i = 0; i < qnt_nos; i++) {
+        predecessores[i] = NIL;
+        dist[i] = MAX_DIST;
+    }
+    dist[origem] = 0;
 }
 
 /**
@@ -110,8 +113,8 @@ void Grafo::relax(int inicio, int fim) {
  * @post Nenhuma
  */
 void Grafo::ler() {
-	debug("Informe os dados na mesma sintaxe do arquivo\n");
-	constroi(std::cin);
+    debug("Informe os dados na mesma sintaxe do arquivo\n");
+    constroi(std::cin);
 }
 
 /**
@@ -121,15 +124,15 @@ void Grafo::ler() {
  * @post Nenhuma
  */
 void Grafo::mostrar() {
-	for (int i = 0; i < this->qnt_nos; i++) {
-		std::cout << "Arestas que saem de " << i << ": ";
+    for (int i = 0; i < this->qnt_nos; i++) {
+        std::cout << "Arestas que saem de " << i << ": ";
         grafo[i].mostrar();
 
-		//for (auto const &iterator : grafo[i]) {
-			//std::cout << iterator << ' ';
-		//}
-		//std::cout << '\n';
-	}
+        //for (auto const &iterator : grafo[i]) {
+        //std::cout << iterator << ' ';
+        //}
+        //std::cout << '\n';
+    }
 }
 
 /**
@@ -140,9 +143,9 @@ void Grafo::mostrar() {
  * @post cada lista do grafo está ordenada
  */
 void Grafo::ordena() {
-	for(int i = 0; i < qnt_nos; i++) {
-		//grafo[i].sort();
-	}
+    for(int i = 0; i < qnt_nos; i++) {
+        //grafo[i].sort();
+    }
 }
 
 int Grafo::qntArestas() {
@@ -319,118 +322,154 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
     delete[] dist;
     delete[] predecessores;
     ordem.clear();
-}
-
-/**
- * @brief Utilizado para mostrar na tela o caminho de um
- * vertice origem até um vertice fim utilizando a lista de
- * predecessores
- *
- * Utilizado no algoritimo de BellMan-Ford
- * @param inicio vertice que inicia o caminho
- * @param fim vertice que acaba o caminho
- * @pre vetor de predecessores alocado
- * @post Caminho impresso na tela
- */
-void Grafo::printCaminho(int inicio, int fim) {
-    if (inicio == fim) {
-        std::cout << inicio;
     }
-    std::cout << fim << " - ";
-    printCaminho(inicio, predecessores[fim]);
-}
 
-bool Grafo::bellmanFord(int vertice_inicio) {
-    int i, qnt = 0;
-    bool ret = true;
-    predecessores = new int[qnt_nos];
-    dist		  = new int[qnt_nos];
+    /**
+     * @brief Utilizado para mostrar na tela o caminho de um
+     * vertice origem até um vertice fim utilizando a lista de
+     * predecessores
+     *
+     * Utilizado no algoritimo de BellMan-Ford
+     * @param inicio vertice que inicia o caminho
+     * @param fim vertice que acaba o caminho
+     * @pre vetor de predecessores alocado
+     * @post Caminho impresso na tela
+     */
+    void Grafo::printCaminho(int inicio, int fim) {
+        if (inicio == fim) {
+            std::cout << inicio;
+        }
+        std::cout << fim << " - ";
+        printCaminho(inicio, predecessores[fim]);
+    }
 
-    inicializaOrigem(vertice_inicio);
+    bool Grafo::bellmanFord(int vertice_inicio) {
+        int i, qnt = 0;
+        bool ret = true;
+        predecessores = new int[qnt_nos];
+        dist		  = new int[qnt_nos];
 
-    while (qnt < qnt_nos - 1) {
+        inicializaOrigem(vertice_inicio);
+
+        while (qnt < qnt_nos - 1) {
+            // percorre cada uma das arestas
+            for(i = 0; i < qnt_nos; i++) {
+                //for(auto it : grafo[i]) {
+                //relax(i, it.id);
+                //}
+            }
+            qnt++;
+        }
+
         // percorre cada uma das arestas
         for(i = 0; i < qnt_nos; i++) {
-            //for(auto it : grafo[i]) {
-                //relax(i, it.id);
-            //}
-        }
-        qnt++;
-    }
-
-    // percorre cada uma das arestas
-    for(i = 0; i < qnt_nos; i++) {
-        //for (auto it : grafo[i]) {
+            //for (auto it : grafo[i]) {
             //if (dist[it.id] > dist[i] + it.peso) {
-                //ret = false;
-                //break;
+            //ret = false;
+            //break;
             //}
+            //}
+        }
+
+        //if (ret) {
+        for(i = 0; i < qnt_nos; i++) {
+            std::cout << "caminho: ";
+            printCaminho(vertice_inicio, i);
+        }
+        //}else {
+        //std::cout << "O Grafo Possui ciclo negativo" << std::endl;
         //}
+        //printPredecessores();
+        //printDist();
+
+        delete[] dist;
+        delete[] predecessores;
+        return ret;
     }
 
-    //if (ret) {
-    for(i = 0; i < qnt_nos; i++) {
-        std::cout << "caminho: ";
-        printCaminho(vertice_inicio, i);
-    }
-    //}else {
-    //std::cout << "O Grafo Possui ciclo negativo" << std::endl;
-    //}
-    //printPredecessores();
-    //printDist();
-
-    delete[] dist;
-    delete[] predecessores;
-    return ret;
-}
-
-void Grafo::kruskal(){
-    Aresta *arvore;
-    int qnt_aresta = this->qntArestas();
-    arvore = new Aresta[qnt_aresta];
-    Lista<int> aux;
-    Lista<Aresta> A;
-    Lista<Lista<int>> conjuntoV;
-    Lista<int> l_inicio;
-    Lista<int> l_fim;
-    for(int i=0;i<qnt_nos;i++){
-        aux.insereFim(i);
-        conjuntoV.insereFim(aux);
-        aux.retiraFim();
-    }
-    // inserir as coisas Usando isSimetrica
-    std::sort(arvore, arvore+qnt_aresta);
-    for (int i = 0; i < qnt_aresta; i++) {
-        //if (conjuntoV.acha(conjuntoV.naPos(arvore[i].inicio)->dado)) {
-        //if (conjuntoV.naPos(arvore[i].inicio) != conjuntoV.naPos(arvore[i].fim)) {
-        aux = conjuntoV.inicio()->dado;
-        for (int c = 0; !aux.acha(arvore[i].inicio); c++) {
-            aux = conjuntoV.naPos(c)->dado;
+    bool Grafo::existeSimetrico(Aresta *v, int tam, Aresta &dado) {
+        for (int i = 0; i < tam; i++) {
+            if (v[i].isSimetrica(dado)) {
+                return true;
+            }
         }
-        l_inicio = aux;
-        aux = conjuntoV.inicio()->dado;
-        for (int c = 0; !aux.acha(arvore[i].inicio); c++) {
-            aux = conjuntoV.naPos(c)->dado;
-        }   
-        l_fim = aux;
-        if (l_inicio != l_fim) {
-            A.insereFim(arvore[i]);
-        }
-        
+        return false;
     }
-    
 
+    void Grafo::kruskal() {
+        Aresta *arvore;
+        int i, c, peso;
+        int qnt_aresta = this->qntArestas();
+        arvore = new Aresta[qnt_aresta];
+        Lista<int> aux;
+        Lista<int> *p;
+        Lista<Aresta> A;
+        Lista<Lista<int>*> conjuntoV;
+        Lista<int> l_inicio;
+        Lista<int> l_fim;
 
+        for(i=0;i<qnt_nos;i++) {
+            p = new Lista<int>;
+            p->insereFim(i);
+            conjuntoV.insereFim(p);
+            p = nullptr;
+        }
 
-}
+        for(i = 0; i < qnt_nos; i++) {
+            conjuntoV.naPos(i)->dado->mostrar();
+        }
+        // inserir as coisas Usando isSimetrica
+        for(i = c = 0; i < qnt_nos; i++) {
+            for (auto it = grafo[i].inicio(); it; it = it->proximo) {
+                Aresta inserir(i, it->dado.id, it->dado.peso);
+                if (!this->existeSimetrico(arvore, c, inserir)) {
+                    arvore[c++] = inserir;
+                }
+            }
+        }
 
-/**
- * @brief Destrutor da classe Grafo
- *
- * @pre Nenhuma
- * @post Nenhuma
- */
-Grafo::~Grafo() {
-    delete []grafo;
-    debug("Destruindo um grafo\n");
-}
+        for(i = 0; i < c; i++) {
+            debug(arvore[i] << std::endl);
+        }
+
+        //std::stable_sort(arvore, (arvore + qnt_aresta));
+        selectionSort(arvore, c);
+
+        for(i = 0; i < c; i++) {
+            debug(arvore[i] << std::endl);
+        }
+
+        for (i = peso = 0; i < qnt_aresta; i++) {
+            /*
+               aux = *conjuntoV.inicio()->dado;
+               for (c = 0; !aux.acha(arvore[i].inicio); c++) {
+               aux = *conjuntoV.naPos(c)->dado;
+               }
+               l_inicio = aux;
+               aux = *conjuntoV.inicio()->dado;
+               for (c = 0; !aux.acha(arvore[i].inicio); c++) {
+               aux = *conjuntoV.naPos(c)->dado;
+               }   
+               l_fim = aux;
+               */
+            if (!A.acha(arvore[i]) && !A.acha(*(new Aresta (arvore[i].fim, arvore[i].inicio, arvore[i].peso)))) {
+                peso += arvore[i].peso;
+                A.insereFim(arvore[i]);
+            }
+        }
+
+        std::cout << "peso total: " << peso << "\narestas: ";
+        A.mostrar();
+        delete[] arvore;
+    }
+
+    /**
+     * @brief Destrutor da classe Grafo
+     *
+     * @pre Nenhuma
+     * @post Nenhuma
+     */
+    Grafo::~Grafo() {
+        delete []grafo;
+        debug("Destruindo um grafo\n");
+    }

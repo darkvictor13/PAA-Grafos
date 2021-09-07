@@ -99,7 +99,7 @@ class Lista {
 
         bool operator != (const Lista<T> &other) {
             No<T> *atual = this->cabeca;
-            No<T> *outra = other->cabeca;
+            No<T> *outra = other.cabeca;
             while (atual && outra) {
                 if (atual->dado != outra->dado) {
                     return false;

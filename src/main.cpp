@@ -37,11 +37,14 @@ int main (int argc, char *argv[]) {
 
     g.ler(filename);
     g.mostrar();
+    /*
     cout << "\nBusca em Profundidade:\n";
     g.buscaEmProfundidade(3);
     cout << "\nBusca em largura:\n";
     g.buscaEmLargura(3);
+    */
     //cout << "\nBellMan-Ford:\n";
-    //g.bellmanFord(3);
+    cout << "\nKruskal:\n";
+    g.kruskal();
     return 0;
 }
