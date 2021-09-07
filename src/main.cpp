@@ -18,6 +18,5 @@ int main (int argc, char *argv[]) {
     }
     MenuPrincipal menu (&g);
     menu.loop();
-
     return 0;
 }

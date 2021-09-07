@@ -352,14 +352,14 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
 
         inicializaOrigem(vertice_inicio);
 
-        printDist();
+        //printDist();
         for (qnt = 0; qnt < (qnt_nos - 3); qnt++) {
             // percorre cada uma das arestas
             for(i = 0; i < qnt_nos; i++) {
                 for(auto it = grafo[i].inicio(); it; it = it->proximo) {
                     relax(i, it->dado.id, it->dado.peso);
                 }
-                printDist();
+                //printDist();
             }
             qnt++;
         }
