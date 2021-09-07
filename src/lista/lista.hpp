@@ -83,6 +83,17 @@ class Lista {
         bool isVazia() {
             return (this->cabeca == nullptr);
         }
+
+        bool operator != (const Lista<T> &other) {
+            No<T> *atual = this->cabeca;
+            No<T> *outra = other->cabeca;
+            while (atual && outra) {
+                if (atual->dado != outra->dado) {
+                    return false;
+                }
+            }
+            return true;
+        }
         
         No<T> *inicio() {
             return this->cabeca;
