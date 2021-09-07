@@ -402,17 +402,18 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
         return false;
     }
 
-        void Grafo::kruskal() {
+    void Grafo::kruskal() {
         Aresta *arvore;
-        int i, c, peso;
-        int qnt_aresta = this->qntArestas();
-        arvore = new Aresta[qnt_aresta];
-        Lista<int> aux;
         Lista<int> *p;
         Lista<Aresta> A;
         Lista<Lista<int>*> conjuntoV;
-        Lista<int> l_inicio;
-        Lista<int> l_fim;
+        Lista<int> *conj_u, *conj_v;
+        int i, c, peso;
+        int qnt_aresta = this->qntArestas();
+        if (!this->isOrientado) {
+            qnt_aresta /= 2;
+        }
+        arvore = new Aresta[qnt_aresta];
 
         //conjunto (v)
         for(i=0;i<qnt_nos;i++) {
@@ -420,11 +421,6 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
             p->insereFim(i);
             conjuntoV.insereFim(p);
             p = nullptr;
-        }
-        //print
-        debug("conjunto(v)\n\n");
-        for(i = 0; i < qnt_nos; i++) {
-            conjuntoV.naPos(i)->dado->mostrar();
         }
         // inserir as coisas Usando isSimetrica
         //inserindo todas as arestas para ordenar
@@ -437,13 +433,7 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
                 }
             }
         }
-        //print
-        for(i = 0; i < c; i++) {
-            debug(arvore[i] << std::endl);
-        }
-        debug("\n\n");
 
-        //std::stable_sort(arvore, (arvore + qnt_aresta));
         debug("arestas ordenadas em ordem nao decrescente\n");
         selectionSort(arvore, c);
 
@@ -451,30 +441,40 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
             debug(arvore[i] << std::endl);
         }
 
+        conj_u = conj_v = nullptr;
         for (i = peso = 0; i < qnt_aresta; i++) {
-            /*
-               aux = *conjuntoV.inicio()->dado;
-               for (c = 0; !aux.acha(arvore[i].inicio); c++) {
-               aux = *conjuntoV.naPos(c)->dado;
-               }
-               l_inicio = aux;
-               aux = *conjuntoV.inicio()->dado;
-               for (c = 0; !aux.acha(arvore[i].inicio); c++) {
-               aux = *conjuntoV.naPos(c)->dado;
-               }   
-               l_fim = aux;
-               */
-            
-            //arvore tem os vertices ordenados pelas arestas
-            //conjunto v tem os vertices em listas de listas
-            auto conjU = conjuntoV.naPos(i);
-            int conjV = arvore[i].fim;
+            debug("Antes do for mais interno\n");
+            for (auto per = conjuntoV.inicio(); per; per = per->proximo) {
+                debug("Dentro do for\n");
+                if (!conj_u) {
+                    if (per->dado->acha(arvore[i].inicio)) {
+                        conj_u = per->dado;
+                    }
+                }
+                if (!conj_v) {
+                    if (per->dado->acha(arvore[i].fim)) {
+                        conj_v = per->dado;
+                    }
+                }
+            }
 
-            //!A.acha(arvore[i]) && !A.acha(*(new Aresta (arvore[i].fim, arvore[i].inicio, arvore[i].peso)))
-            if (conjU != conjV) {
+            if (conj_u && conj_v && (conj_u != conj_v)) {
+                debug("Entrei no if de inserir\n");
+                for (auto p = conj_v->inicio(); p; p = p->proximo) {
+                    conj_u->insereFim(p->dado);
+                }
+                for (auto it = conjuntoV.inicio(); it; it = it->proximo) {
+                    if (!(it->dado != conj_v)) {
+                        conjuntoV.desencadeia(it);
+                        break;
+                    }
+                }
                 peso += arvore[i].peso;
                 A.insereFim(arvore[i]);
             }
+            debug("conjunto(v)\n\n");
+            conj_u = conj_v = nullptr;
+            debug("Acabei o for\n");
         }
 
         std::cout << "peso total: " << peso << "\narestas: ";
