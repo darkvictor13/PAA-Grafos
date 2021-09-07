@@ -15,6 +15,12 @@ void MenuPrincipal::mostrar() {
 	cout << "--------------------------------------------------\n";
 	cout << "                  Opçoes do menu\n";
 	cout << "--------------------------------------------------\n";
+    cout << "                  Algoritmos em grafos: \n\n";
+    cout << "                  1.  Busca em Profundidade\n";
+    cout << "                  2.  Busca em Largura\n";
+    cout << "                  3.  Bellmain-Ford\n";
+    cout << "                  4.  Kruskal\n";
+    cout << "                  5.  Sair\n";
 }
 
 #ifdef __gnu_linux__
@@ -71,9 +77,11 @@ char MenuPrincipal::getChar() {
 
 #endif //__gnu_linux__
 
+
 void MenuPrincipal::loop() {
 	using namespace std;
 	char entrada = 0;
+    int verticeInicial;
     while (entrada != ESC) {
 		system(CLEAR);
 		mostrar();
@@ -81,10 +89,61 @@ void MenuPrincipal::loop() {
 		switch (entrada)
 		{
 		case '1':
-			cout << "opcao 1\n";
+			cout << "Busca em profundidade\n";
+            cout << "Digite o vértice inicial: ";
+            cin >> verticeInicial;
+            while (verticeInicial < 0 || verticeInicial > g->qnt_nos){
+                cout << "Vertice inválido. Digite novamente: \n";
+                cin >> verticeInicial;
+            }
+            g->buscaEmProfundidade(verticeInicial);
+            cout << "\nDigite ENTER para sair\n";
+            getChar();
+            
 			break;
 		
+        case '2':
+			cout << "Busca em Largura\n";
+            cout << "Digite o vértice inicial: ";
+            cin >> verticeInicial;
+            while (verticeInicial < 0 || verticeInicial > g->qnt_nos){
+                cout << "Vertice inválido. Digite novamente: \n";
+                cin >> verticeInicial;
+            }
+            g->buscaEmLargura(verticeInicial);
+            cout << "\nDigite ENTER para sair\n";
+            getChar();
+			break;
+
+        case '3':
+			cout << "Bellman-Ford\n";
+            cout << "Digite o vértice inicial: ";
+            cin >> verticeInicial;
+            while (verticeInicial < 0 || verticeInicial > g->qnt_nos){
+                cout << "Vertice inválido. Digite novamente: \n";
+                cin >> verticeInicial;
+            }
+            g->bellmanFord(verticeInicial);
+            cout << "\nDigite ENTER para sair\n";
+            getChar();
+			break;
+        
+        case '4':
+			cout << "Kruskal\n";
+            g->kruskal();
+            cout << "\nDigite ENTER para sair\n";
+            getChar();
+			break;
+        
+        case '5':
+			cout << "Para sair digite ESC\n";
+            getChar();
+        
+			break;
+
 		default:
+            cout << "Digite uma opção válida\n";
+            getChar();
 			break;
 		}
 	}

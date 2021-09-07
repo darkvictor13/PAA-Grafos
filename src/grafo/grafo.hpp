@@ -58,6 +58,7 @@ enum cor {
  * Utiliza a representação Listas de Adjacência
  */
 class Grafo {
+    friend class MenuPrincipal;
     private:
         bool isOrientado; /// booleano que indica se o grafo é orientado
         int qnt_nos;  /// inteiro que indica a quantidade de vértices do grafo
