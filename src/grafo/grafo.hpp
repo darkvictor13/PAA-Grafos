@@ -22,6 +22,7 @@
 #include "no_grafo.hpp"
 #include "../utils/debug.hpp"
 #include "../lista/lista.hpp"
+#include "aresta_kruskal.hpp"
 
 /**
  * @brief enumera todas as cores possiveis que um vértice
@@ -45,68 +46,9 @@ enum cor {
 /**
  * @brief Distancia máxima possível que não causa overflow em um int
  */
-#define MAX_DIST ((INT_MAX/2) - 1)
+#define MAX_DIST ((INT_MAX/4) - 1)
 
-struct Aresta{
-    int inicio, fim, peso;
 
-    Aresta(int inicio, int fim, int peso) {
-        this->inicio = inicio;
-        this->fim = fim;
-        this->peso = peso;
-    }
-
-    Aresta() {
-        this->inicio = 0;
-        this->fim = 0;
-        this->peso = 0;
-    }
-
-    bool operator<(const Aresta &other) {
-        return this->peso < other.peso;
-    }
-
-    bool operator==(const Aresta &other) {
-        return  peso    == other.peso   &&
-                inicio  == other.inicio &&
-                fim     == other.fim;
-    }
-
-    friend bool operator < (const Aresta &eu, const Aresta &outro) {
-        return eu.peso < outro.peso;
-    }
-
-    //bool operator<(Aresta other) {
-        //return this->peso < other.peso;
-    //}
-
-    //bool operator>(const Aresta &other) {
-        //return this->peso > other.peso;
-    //}
-
-	friend std::ostream& operator << (std::ostream &out, const Aresta &other) {
-        out << '(' << other.inicio << ',' << other.fim << ')';
-        return out;
-    }
-
-    bool isSimetrica(const Aresta &other) {
-        return this->inicio == other.fim &&
-                this->fim   == other.inicio;
-    }
-};
-
-template<class T> void selectionSort(T *v, int tam) {
-    int i, j, menor;
-    for(i = 0; i < tam; i++) {
-        menor = i;
-        for(j = i + 1; j < tam; j++) {
-            if (v[j] < v[menor]) {
-                menor = j;
-            }
-        }
-        std::swap(v[i], v[menor]);
-    }
-}
 
 /**
  * @brief Classe que representa um único grafo,
@@ -169,6 +111,12 @@ class Grafo {
          */
         void printPredecessores();
 
+        /**
+         * @brief Imprime o vetor de distâncias
+         * 
+         * @pre vetor de distâncias alocada
+         * @post vetor de distâncias impressa na saída padrão
+         */
         void printDist();
 
         /**
@@ -204,7 +152,7 @@ class Grafo {
          * com suas estruturas alocadas
          * @post menor peso entre início e fim
          */
-        void relax(int inicio, int fim);
+        void relax(const int inicio, const int fim, const int peso);
 
         // somente utilizado para kruskal
         bool existeSimetrico(Aresta *v, int tam, Aresta &dado);
@@ -245,14 +193,12 @@ class Grafo {
         void mostrar();
 
         /**
-         * @brief Ordena cada uma das Listas de Adjacência
+         * @brief 
          * 
-         * Complexidade O(n^2 * n*lg(n))
-         * @pre o vetor de listas (grafo), deve estar alocado
-         * @post cada lista do grafo está ordenada
+         * @return int A quantidade de Arestas presentes no Grafo
+         * @pre Nenhuma
+         * @post Nenhuma
          */
-        void ordena();
-
         int qntArestas();
 
         //----------------- Algorítimos de um grafo -----------------//

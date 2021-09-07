@@ -43,8 +43,9 @@ int main (int argc, char *argv[]) {
     cout << "\nBusca em largura:\n";
     g.buscaEmLargura(3);
     */
-    //cout << "\nBellMan-Ford:\n";
-    cout << "\nKruskal:\n";
-    g.kruskal();
+    cout << "\nBellMan-Ford:\n";
+    g.bellmanFord(3);
+    //cout << "\nKruskal:\n";
+    //g.kruskal();
     return 0;
 }

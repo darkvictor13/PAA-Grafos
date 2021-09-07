@@ -64,7 +64,6 @@ class Lista {
         }
 
         void insereOrdenadoRec(No<T> *atual, T dado) {
-            debug("Tentando inserir " << dado << " atual " << atual->dado << std::endl);
             if (atual->dado >= dado) {
                 encadeia(atual->anterior, atual, dado);
             } else if (atual == cauda) {

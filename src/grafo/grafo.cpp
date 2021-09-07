@@ -12,6 +12,19 @@
 #include <iostream>
 #include <iterator>
 
+template<class T> static void selectionSort(T *v, int tam) {
+    int i, j, menor;
+    for(i = 0; i < tam; i++) {
+        menor = i;
+        for(j = i + 1; j < tam; j++) {
+            if (v[j] < v[menor]) {
+                menor = j;
+            }
+        }
+        std::swap(v[i], v[menor]);
+    }
+}
+
 /**
  * @brief Construtor da classe Grafo
  *
@@ -89,6 +102,7 @@ void Grafo::inicializaOrigem(int origem) {
 /**
  * @brief Diminui o limite superior do peso do menor caminho
  *
+ * Devido a estrutura grafo
  * Utilizado no algorítimo de Bellman-Ford
  * @param inicio vertice que inicia o caminho
  * @param fim vertice que acaba o caminho
@@ -96,12 +110,12 @@ void Grafo::inicializaOrigem(int origem) {
  * com suas estruturas alocadas
  * @post menor peso entre início e fim
  */
-void Grafo::relax(int inicio, int fim) {
-    //auto elemento = std::find(grafo[inicio].begin(), grafo[inicio].end(), fim);
-    auto *elemento = grafo[inicio].acha(*new NoGrafo(fim, 0));
-    if (!elemento) return;
-    if (dist[fim] > (dist[inicio] + elemento->dado.peso)) {
-        dist[fim] = dist[inicio] + elemento->dado.peso;
+void Grafo::relax(const int inicio, const int fim, const int peso) {
+    debug("Comparando " << dist[fim] << " > " << dist[inicio] << " + " << peso
+                        << std::endl);
+    if (dist[fim] > (dist[inicio] + peso)) {
+        debug("Entrei no if de mudar\n");
+        dist[fim] = dist[inicio] + peso;
         predecessores[fim] = inicio;
     }
 }
@@ -132,19 +146,6 @@ void Grafo::mostrar() {
         //std::cout << iterator << ' ';
         //}
         //std::cout << '\n';
-    }
-}
-
-/**
- * @brief Ordena cada uma das Listas de Adjacência
- *
- * Complexidade O(n^2 * n*lg(n))
- * @pre o vetor de listas (grafo), deve estar alocado
- * @post cada lista do grafo está ordenada
- */
-void Grafo::ordena() {
-    for(int i = 0; i < qnt_nos; i++) {
-        //grafo[i].sort();
     }
 }
 
@@ -344,37 +345,42 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
     }
 
     bool Grafo::bellmanFord(int vertice_inicio) {
-        int i, qnt = 0;
+        int i, qnt;
         bool ret = true;
         predecessores = new int[qnt_nos];
         dist		  = new int[qnt_nos];
 
         inicializaOrigem(vertice_inicio);
 
-        while (qnt < qnt_nos - 1) {
+        printDist();
+        for (qnt = 0; qnt < (qnt_nos - 3); qnt++) {
             // percorre cada uma das arestas
             for(i = 0; i < qnt_nos; i++) {
-                //for(auto it : grafo[i]) {
-                //relax(i, it.id);
-                //}
+                for(auto it = grafo[i].inicio(); it; it = it->proximo) {
+                    relax(i, it->dado.id, it->dado.peso);
+                }
+                printDist();
             }
             qnt++;
         }
 
+        printDist();
+        printPredecessores();
+
         // percorre cada uma das arestas
-        for(i = 0; i < qnt_nos; i++) {
+        //for(i = 0; i < qnt_nos; i++) {
             //for (auto it : grafo[i]) {
             //if (dist[it.id] > dist[i] + it.peso) {
             //ret = false;
             //break;
             //}
             //}
-        }
+        //}
 
         //if (ret) {
         for(i = 0; i < qnt_nos; i++) {
             std::cout << "caminho: ";
-            printCaminho(vertice_inicio, i);
+            //printCaminho(vertice_inicio, i);
         }
         //}else {
         //std::cout << "O Grafo Possui ciclo negativo" << std::endl;
