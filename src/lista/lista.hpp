@@ -63,6 +63,8 @@ class Lista {
             proximo->anterior = novo;
         }
 
+        
+
         void insereOrdenadoRec(No<T> *atual, T dado) {
             if (atual->dado >= dado) {
                 encadeia(atual->anterior, atual, dado);
@@ -126,6 +128,16 @@ class Lista {
         No<T>* ant( No<T> *p) {
             return p->anterior;
         }
+        No<T> *acha(T dado) {
+            if (isVazia()) {
+                return nullptr;
+            }
+            No<T> *p = cabeca;
+            while(p && !(p->dado == dado)) {
+                p = p->proximo;
+            }
+            return p;
+        }
 
         void insereInicio(T dado) {
             No<T> *novo = new No<T>(dado);
@@ -158,6 +170,25 @@ class Lista {
                 this->cauda->proximo = novo;
                 this->cauda = novo;
             }
+        }
+        
+        void desencadeia(No<T> *elemento) {
+            No<T> *ant = elemento->anterior;
+            No<T> *prox = elemento->proximo;
+
+            if (elemento == this->cabeca) {
+                this->cabeca = prox;
+                this->cabeca->anterior = nullptr;
+            } else if (elemento == this->cauda) {
+                this->cauda = ant;
+                this->cauda->proximo = nullptr;
+            } else {
+                ant->proximo = prox;
+                prox->anterior = ant;
+            }
+
+            elemento->anterior = elemento->proximo = nullptr;
+            delete elemento;
         }
 
         void retiraFim() {
@@ -195,6 +226,10 @@ class Lista {
                 this->cauda = cabeca;
             }
             delete salva_cabeca;
+        }
+
+        void retira(T dado) {
+            desencadeia(acha(dado));
         }
 
         void mostrar() {
@@ -238,17 +273,7 @@ class Lista {
             return qnt;
         }
 
-        No<T>* acha(T dado) {
-            if (isVazia()) {
-                return nullptr;
-            }
-            No<T> *p = cabeca;
-            while(p && !(p->dado == dado)) {
-                p = p->proximo;
-            }
-            return p;
-        }
-
+        
         ~Lista() {
             delete cabeca;
         }

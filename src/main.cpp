@@ -13,7 +13,6 @@ int main (int argc, char *argv[]) {
         filename = argv[1];
     }
 
-    /*
     Lista<NoGrafo> l;
     //Lista<int> l;
     l.insereOrdenado(*new NoGrafo(1, 1));
@@ -24,28 +23,22 @@ int main (int argc, char *argv[]) {
     //l.insereOrdenado(2);
     //l.insereOrdenado(3);
     //l.insereOrdenado(1);
-    debug(l.tam() << '\n');
     l.mostrar();
-    l.mostrarInvertido();
-    l.retiraInicio();
-    l.retiraFim();
     l.mostrar();
-    l.mostrarInvertido();
-    */
 
+    /*
     Grafo g;
 
     g.ler(filename);
     g.mostrar();
-    /*
     cout << "\nBusca em Profundidade:\n";
     g.buscaEmProfundidade(3);
     cout << "\nBusca em largura:\n";
     g.buscaEmLargura(3);
-    */
     cout << "\nBellMan-Ford:\n";
     g.bellmanFord(3);
     //cout << "\nKruskal:\n";
     //g.kruskal();
+    */
     return 0;
 }
