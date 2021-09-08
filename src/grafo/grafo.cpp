@@ -147,8 +147,8 @@ void Grafo::ler() {
  */
 void Grafo::mostrar() {
     for (int i = 0; i < this->qnt_nos; i++) {
-        std::cout << "Arestas que saem de " << i << ": ";
-        grafo[i].mostrar();
+        std::cout << "Vértices adjacentes a " << i << ": ";
+        grafo[i].mostrar(" ");
     }
 }
 
@@ -176,12 +176,7 @@ int Grafo::qntArestas() {
  * @post lista impressa na saída padrão
  */
 void Grafo::printOrdemAcesso() {
-    debug("IMprimindo\n");
-    auto it = ordem.inicio();
-    for(; it; it = it->proximo) {
-        std::cout << it->dado << " - ";
-    }
-    std::cout << it->dado << '\n';
+    ordem.mostrar(" - ");
 }
 
 /**
@@ -511,7 +506,7 @@ void Grafo::kruskal() {
     }
 
     std::cout << "peso total: " << peso << "\narestas: ";
-    A.mostrar();
+    A.mostrar(" ");
     delete[] arvore;
 }
 
