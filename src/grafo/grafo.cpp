@@ -338,6 +338,10 @@ void Grafo::printCaminho(int inicio, int fim) {
         std::cout << fim;
         return;
     }
+    if (inicio == NIL || predecessores[inicio] == NIL) {
+        std::cout << "Inacessível";
+        return;
+    }
     printCaminho(predecessores[inicio], fim);
     std::cout << " - " << inicio;
 }
