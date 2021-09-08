@@ -273,6 +273,11 @@ class Lista {
             return qnt;
         }
 
+        void limpar() {
+            delete cabeca;
+            cabeca = cauda = nullptr;
+        }
+
         
         ~Lista() {
             delete cabeca;

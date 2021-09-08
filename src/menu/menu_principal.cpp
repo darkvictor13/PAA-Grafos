@@ -119,10 +119,10 @@ void MenuPrincipal::loop() {
 
         case '3':
             if (!this->g->isOrientado) {
-                cout << "Grafo não orientado, algoritmo nao atende ao requisito\n";
+                cout << "Grafo não orientado, algoritmo não atende ao requisito\n";
                 cout << "\nDigite ENTER para sair\n";
                 getChar();
-			    break;
+                break;
             }
 			cout << "Bellman-Ford\n";
             cout << "Digite o vértice inicial: ";

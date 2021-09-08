@@ -120,10 +120,7 @@ void Grafo::inicializaOrigem(int origem) {
  * @post menor peso entre início e fim
  */
 bool Grafo::relax(const int inicio, const int fim, const int peso) {
-    //debug("Comparando " << dist[fim] << " > " << dist[inicio] << " + " << peso
-    //<< std::endl);
     if (dist[fim] > (dist[inicio] + peso)) {
-        debug("Entrei no if de mudar\n");
         dist[fim] = dist[inicio] + peso;
         predecessores[fim] = inicio;
         return true;
@@ -152,18 +149,22 @@ void Grafo::mostrar() {
     for (int i = 0; i < this->qnt_nos; i++) {
         std::cout << "Arestas que saem de " << i << ": ";
         grafo[i].mostrar();
-
-        //for (auto const &iterator : grafo[i]) {
-        //std::cout << iterator << ' ';
-        //}
-        //std::cout << '\n';
     }
 }
 
+/**
+ * @brief Conta a quantidade de arestas em um grafo
+ * @return int A quantidade de Arestas presentes no Grafo
+ * @pre Grafo inicializado
+ * @post Nenhuma
+ */
 int Grafo::qntArestas() {
     int qnt = 0;
     for (int i = 0; i < qnt_nos; i++) {
         qnt += grafo[i].tam();
+    }
+    if (!this->isOrientado) {
+        qnt /= 2;
     }
     return qnt;
 }
@@ -175,11 +176,12 @@ int Grafo::qntArestas() {
  * @post lista impressa na saída padrão
  */
 void Grafo::printOrdemAcesso() {
-    auto it = ordem.cbegin();
-    for (auto fim = std::prev(ordem.cend()); it != fim; it++) {
-        std::cout << *it << " - ";
+    debug("IMprimindo\n");
+    auto it = ordem.inicio();
+    for(; it; it = it->proximo) {
+        std::cout << it->dado << " - ";
     }
-    std::cout << *it << '\n';
+    std::cout << it->dado << '\n';
 }
 
 /**
@@ -225,11 +227,9 @@ void Grafo::printDist() {
  * @post Vértice index totalmente explorado, cor preto
  */
 void Grafo::buscaEmProfundidadeVisit(int index) {
-    debug(index);
-    debug('\n');
-    ordem.push_back(index);
+    debug("Antes de inserir\n");
+    ordem.insereFim(index);
     cores[index] = CINZA;
-    //for(auto it : grafo[index]) {
     for(auto it = grafo[index].inicio(); it; it = it->proximo) {
         if(cores[it->dado.id] == BRANCO) {
             predecessores[it->dado.id] = index;
@@ -249,16 +249,17 @@ void Grafo::buscaEmProfundidadeVisit(int index) {
  */
 void Grafo::buscaEmProfundidade(int vertice_inicio) {
     int i;
-    //int NIL = std::numeric_limits<int>::max();
 
-    predecessores = new(std::nothrow) int[qnt_nos];
-    cores         = new(std::nothrow) cor[qnt_nos];
+    predecessores = new int[qnt_nos];
+    cores         = new cor[qnt_nos];
+    debug("Construi\n");
 
     // inicialização
     for(i = 0; i < qnt_nos; i++) {
         cores[i] = BRANCO;
         predecessores[i] = NIL;
     }
+    debug("Inicializei\n");
 
     for(i = vertice_inicio; i < qnt_nos; i++) {
         if (cores[i] == BRANCO) {
@@ -276,7 +277,7 @@ void Grafo::buscaEmProfundidade(int vertice_inicio) {
 
     delete[] cores;
     delete[] predecessores;
-    ordem.clear();
+    ordem.limpar();
 }
 
 /**
@@ -289,11 +290,10 @@ void Grafo::buscaEmProfundidade(int vertice_inicio) {
  */
 void Grafo::buscaEmLargura(int vertice_inicio) {
     int i;
-    //std::queue<int> fila;
     Lista<int> fila;
-    predecessores = new(std::nothrow) int[qnt_nos];
-    cores         = new(std::nothrow) cor[qnt_nos];
-    dist		  = new(std::nothrow) int[qnt_nos];
+    predecessores = new int[qnt_nos];
+    cores         = new cor[qnt_nos];
+    dist		  = new int[qnt_nos];
 
     // inicialização
     for(i = 0; i < qnt_nos; i++) {
@@ -304,7 +304,7 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
     cores[vertice_inicio] = CINZA;
     dist[vertice_inicio] = 0;
     fila.insereFim(vertice_inicio);
-    ordem.push_back(vertice_inicio);
+    ordem.insereFim(vertice_inicio);
 
     int cabeca;
     while(!fila.isVazia()) {
@@ -316,7 +316,7 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
                 dist[salva_id] = dist[cabeca] + 1;
                 predecessores[salva_id] = cabeca;
                 fila.insereFim(salva_id);
-                ordem.push_back(salva_id);
+                ordem.insereFim(salva_id);
             }
         }
         fila.retiraInicio();
@@ -327,7 +327,7 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
     delete[] cores;
     delete[] dist;
     delete[] predecessores;
-    ordem.clear();
+    ordem.limpar();
 }
 
 /**
@@ -350,14 +350,19 @@ void Grafo::printCaminho(int inicio, int fim) {
     std::cout << " - " << inicio;
 }
 
-int Grafo::getDistCaminho(int inicio, int fim) {
-    if (inicio == fim) {
-        return 0;
-    }
-    return dist[inicio] +
-        getDistCaminho(predecessores[inicio], fim);
-}
-
+/**
+ * @brief Executa o algorítimo de BellMan-Ford
+ *
+ * Algorítimo que encontra o menor caminho de todos os vértices em
+ * relação ao vertice passado como argumento
+ * @param vertice_inicio o vértice para qual todos os outros devem
+ * encontrar o menor caminho
+ * @return true Caso o Grafo não possua um cíclo negativo
+ * @return false Caso o Grafo possua um cíclo negativo
+ * @pre vértice de início está contido no Grafo,
+ *      Grafo deve ser orientado,
+ * @post Nenhuma
+ */
 bool Grafo::bellmanFord(int vertice_inicio) {
     int i, qnt;
     bool ret;
@@ -396,9 +401,9 @@ bool Grafo::bellmanFord(int vertice_inicio) {
 
     if (ret) {
         for(i = 0; i < qnt_nos; i++) {
-            std::cout   << "destino: " << i << ' '
-                << "dist: " << getDistCaminho(i, vertice_inicio) << ' '
-                << "caminho: ";
+            std::cout   << "destino: "  << i        << ' '
+                        << "dist: "     << dist[i]  << ' '
+                        << "caminho: ";
 
             printCaminho(i, vertice_inicio);
             std::cout << std::endl;
@@ -412,6 +417,18 @@ bool Grafo::bellmanFord(int vertice_inicio) {
     return ret;
 }
 
+/**
+ * @brief Busca no Vetor de Arestas uma Aresta simétrica
+ *
+ * somente utilizado para kruskal
+ * @param v Vetor de Arestas
+ * @param tam Tamanho do vetor
+ * @param dado Referência para Aresta a ser buscada
+ * @return true Existe Uma aresta simétrica no vetor
+ * @return false Não existe Uma aresta simétrica no vetor
+ * @pre Vetor de arestas carregado
+ * @post Nenhuma
+ */
 bool Grafo::existeSimetrico(Aresta *v, int tam, Aresta &dado) {
     for (int i = 0; i < tam; i++) {
         if (v[i].isSimetrica(dado)) {
@@ -429,9 +446,6 @@ void Grafo::kruskal() {
     Lista<int> *conj_u, *conj_v;
     int i, c, peso;
     int qnt_aresta = this->qntArestas();
-    if (!this->isOrientado) {
-        qnt_aresta /= 2;
-    }
     arvore = new Aresta[qnt_aresta];
 
     //conjunto (v)
