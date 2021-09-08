@@ -7,21 +7,24 @@ MenuPrincipal::MenuPrincipal() {
 
 MenuPrincipal::MenuPrincipal(Grafo *g) {
     debug("Construindo Menu\n");
-	this->g = g;
+    this->g = g;
 }
 
-void MenuPrincipal::mostrar() {
-	using namespace std;
-	cout << "--------------------------------------------------\n";
-	cout << "                  Opçoes do menu\n";
-	cout << "--------------------------------------------------\n";
-    cout << "                  Algoritmos em grafos: \n\n";
-    cout << "                  1.  Busca em Profundidade\n";
-    cout << "                  2.  Busca em Largura\n";
-    cout << "                  3.  Bellmain-Ford\n";
-    cout << "                  4.  Kruskal\n";
-    cout << "                  5.  Carregar grafo\n";
-    cout << "                  6.  Sair\n\n\n";
+void MenuPrincipal::mostrar() const {
+    using namespace std;
+    cout    << "|--------------------------------------------------|\n"
+            << "|                  Menu Principal                  |\n"
+            << "|--------------------------------------------------|\n"
+            << "|                  Algoritmos em grafos:           |\n"
+            << "|                                                  |\n"
+            << "|                  1.  Busca em Profundidade       |\n"
+            << "|                  2.  Busca em Largura            |\n"
+            << "|                  3.  Bellmain-Ford               |\n"
+            << "|                  4.  Kruskal                     |\n"
+            << "|                  5.  Carregar grafo              |\n"
+            << "|                  6.  Mostrar Grafo               |\n"
+            << "|                  7.  Sair                        |\n"
+            << "|--------------------------------------------------|\n\n\n";
 }
 
 #ifdef __gnu_linux__
@@ -33,7 +36,7 @@ void MenuPrincipal::mostrar() {
  * @pre Nenhuma
  * @post Nenhuma
  */
-char MenuPrincipal::getChar() {
+char MenuPrincipal::getChar() const {
     char character = 0;
     struct termios old = {0};
     if(tcgetattr(0, &old)<0)
@@ -63,7 +66,7 @@ char MenuPrincipal::getChar() {
  * @pre Nenhuma
  * @post Nenhuma
  */
-char MenuPrincipal::getChar() {
+char MenuPrincipal::getChar() const { 
     DWORD mode, cc;
     HANDLE h = GetStdHandle( STD_INPUT_HANDLE );
     if (h == NULL)
@@ -80,96 +83,122 @@ char MenuPrincipal::getChar() {
 
 
 void MenuPrincipal::loop() {
-	using namespace std;
-	char entrada = 0;
+    using namespace std;
+
+    char entrada = 0;
     int verticeInicial;
     string s;
-    while (entrada != ESC) {
-		system(CLEAR);
-		mostrar();
-		entrada = getChar();
-		switch (entrada)
-		{
-		case '1':
-			cout << "Busca em profundidade\n";
-            cout << "Digite o vértice inicial: ";
-            cin >> verticeInicial;
-            while (verticeInicial < 0 || verticeInicial > g->qnt_nos){
-                cout << "Vertice inválido. Digite novamente: \n";
-                cin >> verticeInicial;
-            }
-            g->buscaEmProfundidade(verticeInicial);
-            cout << "\nDigite ENTER para sair\n";
-            getChar();
-            
-			break;
-		
-        case '2':
-			cout << "Busca em Largura\n";
-            cout << "Digite o vértice inicial: ";
-            cin >> verticeInicial;
-            while (verticeInicial < 0 || verticeInicial > g->qnt_nos){
-                cout << "Vertice inválido. Digite novamente: \n";
-                cin >> verticeInicial;
-            }
-            g->buscaEmLargura(verticeInicial);
-            cout << "\nDigite ENTER para sair\n";
-            getChar();
-			break;
 
-        case '3':
-            if (!this->g->isOrientado) {
-                cout << "Grafo não orientado, algoritmo não atende ao requisito\n";
-                cout << "\nDigite ENTER para sair\n";
+    while (entrada != ESC) {
+        system(CLEAR);
+        mostrar();
+        entrada = getChar();
+        switch (entrada) {
+            case '1':
+                if (g->grafo == nullptr) {
+                    cout << "Grafo não inicializado\n";
+                    cout << "\nDigite ENTER para voltar ao menu\n";
+                    getChar();
+                    break;
+                }
+                cout << "Busca em profundidade\n";
+                cout << "Digite o vértice inicial: ";
+                cin >> verticeInicial;
+                while (verticeInicial < 0 || verticeInicial > g->qnt_nos){
+                    cout << "Vértice inválido. Digite novamente: \n";
+                    cin >> verticeInicial;
+                }
+                g->buscaEmProfundidade(verticeInicial);
+                cout << "\nDigite ENTER para voltar ao menu\n";
                 getChar();
                 break;
-            }
-			cout << "Bellman-Ford\n";
-            cout << "Digite o vértice inicial: ";
-            cin >> verticeInicial;
-            while (verticeInicial < 0 || verticeInicial > g->qnt_nos){
-                cout << "Vertice inválido. Digite novamente: \n";
+
+            case '2':
+                if (g->grafo == nullptr) {
+                    cout << "Grafo não inicializado\n";
+                    cout << "\nDigite ENTER para voltar ao menu\n";
+                    getChar();
+                    break;
+                }
+                cout << "Busca em Largura\n";
+                cout << "Digite o vértice inicial: ";
                 cin >> verticeInicial;
-            }
-            g->bellmanFord(verticeInicial);
-            cout << "\nDigite ENTER para sair\n";
-            getChar();
-			break;
-        
-        case '4':
-			cout << "Kruskal\n";
-            g->kruskal();
-            cout << "\nDigite ENTER para sair\n";
-            getChar();
-			break;
+                while (verticeInicial < 0 || verticeInicial > g->qnt_nos){
+                    cout << "Vértice inválido. Digite novamente: \n";
+                    cin >> verticeInicial;
+                }
+                g->buscaEmLargura(verticeInicial);
+                cout << "\nDigite ENTER para voltar ao menu\n";
+                getChar();
+                break;
 
-        case '5':
-            if(g->grafo != nullptr){
-                cout << "Desalocando grafo\n";
-                delete[] g->grafo;
-            }
-			cout << "Carregar Grafo\n";
-            cout << "Informe o caminho para o arquivo: ";
+            case '3':
+                if (g->grafo == nullptr) {
+                    cout << "Grafo não inicializado\n";
+                    cout << "\nDigite ENTER para voltar ao menu\n";
+                    getChar();
+                    break;
+                }
+                if (!this->g->isOrientado) {
+                    cout << "Grafo não orientado, algoritmo não atende ao requisito\n";
+                    cout << "\nDigite ENTER para voltar ao menu\n";
+                    getChar();
+                    break;
+                }
+                cout << "Bellman-Ford\n";
+                cout << "Digite o vértice inicial: ";
+                cin >> verticeInicial;
+                while (verticeInicial < 0 || verticeInicial > g->qnt_nos){
+                    cout << "Vértice inválido. Digite novamente: \n";
+                    cin >> verticeInicial;
+                }
+                g->bellmanFord(verticeInicial);
+                cout << "\nDigite ENTER para voltar ao menu\n";
+                getChar();
+                break;
 
-            cin >> s;
-            g->ler(s);
-            cout << "\nDigite ENTER para sair\n";
-            getChar();
-			break;
-        
-        case '6':
-			cout << "Saindo\n";
-            return;
-            //getChar();
-        
-			break;
+            case '4':
+                cout << "Kruskal\n";
+                g->kruskal();
+                cout << "\nDigite ENTER para voltar ao menu\n";
+                getChar();
+                break;
 
-		default:
-            cout << "Digite uma opção válida\n";
-            getChar();
-			break;
-		}
-	}
+            case '5':
+                if(g->grafo != nullptr){
+                    cout << "Desalocando grafo\n";
+                    delete[] g->grafo;
+                }
+                cout << "Carregar Grafo\n";
+                cout << "Informe o caminho para o arquivo: ";
+
+                cin >> s;
+                g->ler(s);
+                cout << "\nDigite ENTER para voltar ao menu\n";
+                getChar();
+                break;
+
+            case '6':
+                g->mostrar();
+                cout << "\nDigite ENTER para voltar ao menu\n";
+                getChar();
+                
+                break;
+
+            case '7':
+                cout << "Encerrando o programa\n";
+                return;
+
+            case ESC:
+                break;
+
+            default:
+                cout << "Digite uma opção válida\n";
+                cout << "Aperte Enter e tente novamente\n";
+                getChar();
+                break;
+        }
+    }
 }
 
 MenuPrincipal::~MenuPrincipal() {

@@ -232,7 +232,7 @@ class Lista {
             desencadeia(acha(dado));
         }
 
-        void mostrar() {
+        void mostrar(const std::string sep) {
             if (isVazia()) {
                 std::cout << "Lista Vazia\n";
                 return;
@@ -240,7 +240,7 @@ class Lista {
 
             No<T> *percorre = cabeca;
             while (percorre != cauda) {
-                std::cout << percorre->dado << ' ';
+                std::cout << percorre->dado << sep;
                 percorre = percorre->proximo;
             }
             std::cout << percorre->dado << "\n";

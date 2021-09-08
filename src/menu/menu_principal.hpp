@@ -13,9 +13,9 @@ public:
 	MenuPrincipal();
 	MenuPrincipal(Grafo *g);
 
-	void mostrar();
+	void mostrar() const;
 
-    char getChar();
+    char getChar() const;
 
 	void loop();
 
