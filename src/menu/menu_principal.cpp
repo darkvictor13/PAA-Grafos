@@ -20,7 +20,8 @@ void MenuPrincipal::mostrar() {
     cout << "                  2.  Busca em Largura\n";
     cout << "                  3.  Bellmain-Ford\n";
     cout << "                  4.  Kruskal\n";
-    cout << "                  5.  Sair\n";
+    cout << "                  5.  Carregar grafo\n";
+    cout << "                  6.  Sair\n\n\n";
 }
 
 #ifdef __gnu_linux__
@@ -82,6 +83,7 @@ void MenuPrincipal::loop() {
 	using namespace std;
 	char entrada = 0;
     int verticeInicial;
+    string s;
     while (entrada != ESC) {
 		system(CLEAR);
 		mostrar();
@@ -134,10 +136,25 @@ void MenuPrincipal::loop() {
             cout << "\nDigite ENTER para sair\n";
             getChar();
 			break;
-        
+
         case '5':
-			cout << "Para sair digite ESC\n";
+            if(g->grafo != nullptr){
+                cout << "Desalocando grafo\n";
+                delete[] g->grafo;
+            }
+			cout << "Carregar Grafo\n";
+            cout << "Informe o caminho para o arquivo: ";
+
+            cin >> s;
+            g->ler(s);
+            cout << "\nDigite ENTER para sair\n";
             getChar();
+			break;
+        
+        case '6':
+			cout << "Saindo\n";
+            return;
+            //getChar();
         
 			break;
 

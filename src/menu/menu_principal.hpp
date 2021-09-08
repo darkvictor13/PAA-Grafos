@@ -4,6 +4,7 @@
 #include "menu_defines.hpp"
 #include "../utils/debug.hpp"
 #include "../grafo/grafo.hpp"
+#include <string>
 
 class MenuPrincipal {
 private:

@@ -33,6 +33,10 @@ template<class T> static void selectionSort(T *v, int tam) {
  */
 Grafo::Grafo() {
     debug("Construindo um grafo\n");
+    this->grafo = nullptr;
+    cores = nullptr;
+    predecessores = nullptr;
+    dist = nullptr;
 }
 
 /**
@@ -78,7 +82,12 @@ void Grafo::ler(std::string filename) {
     std::ifstream file;
     file.open(filename);
 
-    constroi(file);
+    if(file.is_open()){
+        constroi(file);
+    }else{
+        std::cout << "arquivo " << filename << " invalido\n";
+    }
+    
 
     file.close();
 }
@@ -166,7 +175,6 @@ int Grafo::qntArestas() {
  * @post lista impressa na saída padrão
  */
 void Grafo::printOrdemAcesso() {
-    std::cout << "Ordem de acesso: ";
     auto it = ordem.cbegin();
     for (auto fim = std::prev(ordem.cend()); it != fim; it++) {
         std::cout << *it << " - ";
