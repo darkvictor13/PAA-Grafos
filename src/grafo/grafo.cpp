@@ -222,7 +222,6 @@ void Grafo::printDist() {
  * @post Vértice index totalmente explorado, cor preto
  */
 void Grafo::buscaEmProfundidadeVisit(int index) {
-    debug("Antes de inserir\n");
     ordem.insereFim(index);
     cores[index] = CINZA;
     for(auto it = grafo[index].inicio(); it; it = it->proximo) {
@@ -247,14 +246,12 @@ void Grafo::buscaEmProfundidade(int vertice_inicio) {
 
     predecessores = new int[qnt_nos];
     cores         = new cor[qnt_nos];
-    debug("Construi\n");
 
     // inicialização
     for(i = 0; i < qnt_nos; i++) {
         cores[i] = BRANCO;
         predecessores[i] = NIL;
     }
-    debug("Inicializei\n");
 
     for(i = vertice_inicio; i < qnt_nos; i++) {
         if (cores[i] == BRANCO) {
@@ -367,7 +364,6 @@ bool Grafo::bellmanFord(int vertice_inicio) {
     inicializaOrigem(vertice_inicio);
 
     for (qnt = 0; qnt < (qnt_nos - 2); qnt++) {
-        debug("Iniciando uma nova intercao\n");
         ret = false;
         // percorre cada uma das arestas
         for(i = 0; i < qnt_nos; i++) {
@@ -377,13 +373,14 @@ bool Grafo::bellmanFord(int vertice_inicio) {
                 }
             }
         }
-        // se nao teve nenhum relax nessa interação por todas as arestas
+        // se não teve nenhum relax nessa interação por todas as arestas
+        // pare de executar o algoritmo
         if (!ret) {
             break;
         }
     }
 
-    // percorre cada uma das arestas
+    // percorre cada uma das arestas, buscando ciclo negativo
     ret = true;
     for(i = 0; i < qnt_nos; i++) {
         for (auto it = grafo[i].inicio(); it; it = it->proximo) {
@@ -443,15 +440,14 @@ void Grafo::kruskal() {
     int qnt_aresta = this->qntArestas();
     arvore = new Aresta[qnt_aresta];
 
-    //conjunto (v)
+    //conjunto (v), criando conjunto
     for(i=0;i<qnt_nos;i++) {
         p = new Lista<int>;
         p->insereFim(i);
         conjuntoV.insereFim(p);
         p = nullptr;
     }
-    // inserir as coisas Usando isSimetrica
-    //inserindo todas as arestas para ordenar
+    // inserindo todas as arestas para ordenar
     debug("\narestas de E\n");
     for(i = c = 0; i < qnt_nos; i++) {
         for (auto it = grafo[i].inicio(); it; it = it->proximo) {
@@ -471,9 +467,8 @@ void Grafo::kruskal() {
 
     conj_u = conj_v = nullptr;
     for (i = peso = 0; i < qnt_aresta; i++) {
-        debug("Antes do for mais interno\n");
+        // busca os conjuntos que tem os vértices correspondentes
         for (auto per = conjuntoV.inicio(); per; per = per->proximo) {
-            debug("Dentro do for\n");
             if (!conj_u) {
                 if (per->dado->acha(arvore[i].inicio)) {
                     conj_u = per->dado;
@@ -486,8 +481,9 @@ void Grafo::kruskal() {
             }
         }
 
+        // se os conjuntos são diferentes
         if (conj_u && conj_v && (conj_u != conj_v)) {
-            debug("Entrei no if de inserir\n");
+            // faz a união dos conjuntos (concatena as 2 listas e exclui a de índice maior)
             for (auto p = conj_v->inicio(); p; p = p->proximo) {
                 conj_u->insereFim(p->dado);
             }
@@ -497,12 +493,11 @@ void Grafo::kruskal() {
                     break;
                 }
             }
+            // insere a aresta na árvore pois ela é segura, e guarda o peso dela
             peso += arvore[i].peso;
             A.insereFim(arvore[i]);
         }
-        debug("conjunto(v)\n\n");
         conj_u = conj_v = nullptr;
-        debug("Acabei o for\n");
     }
 
     std::cout << "peso total: " << peso << "\narestas: ";
