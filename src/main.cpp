@@ -13,8 +13,15 @@ int main (int argc, char *argv[]) {
     if (argc == 2) {
         g.ler(argv[1]);
     }
-    MenuPrincipal menu (&g);
-    menu.loop();
+    //MenuPrincipal menu (&g);
+    //menu.loop();
+
+    int entrada;
+    cin >> entrada;
+    while(entrada != -1) {
+        g.buscaEmLargura(entrada);
+        cin >> entrada;
+    }
 
     return 0;
 }

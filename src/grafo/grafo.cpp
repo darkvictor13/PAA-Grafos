@@ -272,6 +272,46 @@ void Grafo::buscaEmProfundidade(int vertice_inicio) {
     ordem.limpar();
 }
 
+static int getGrau(int *pred, int index) {
+    int count = 0;
+    while(pred[index] != NIL) {
+        index = pred[index];
+        count++;
+    }
+    return count;
+}
+
+// problema: se u ou v forem o vértice inicial da busca
+static int BFSPrimeiroAncestralComum(int *pred, int u, int v) {
+    // encontra se qualquer um dos 2 não está contido na árvore
+    if (pred[u] == NIL || pred[v] == NIL) {
+        std::cout << "não tem caminhos\n";
+    }
+    // encontra o nível de profundidade na árvore
+    int grau_u = getGrau(pred, u);
+    int grau_v = getGrau(pred, v);
+    // iguala a profundidade dos 2 para poder pesquisar
+    // ancestrais comuns
+    if (grau_u > grau_v) {
+        while(grau_u != grau_v) {
+            u = pred[u];
+            grau_u--;
+        }
+    }else if (grau_u < grau_v){
+        while(grau_u != grau_v) {
+            v = pred[v];
+            grau_v--;
+        }
+    }
+    // caso u seja 
+    do{
+        u = pred[u];
+        v = pred[v];
+    }while(u != v);
+
+    return u;
+}
+
 /**
  * @brief Visita os vértices a partir de um ponto inicial,
  * seguindo o algorítimo de busca em largura
@@ -315,6 +355,14 @@ void Grafo::buscaEmLargura(int vertice_inicio) {
         cores[cabeca] = PRETO;
     }
     printOrdemAcesso();
+    printPredecessores();
+    int u, v;
+    std::cout << "entre com 2 vértices: ";
+    std::cin >> u >> v;
+    std::cout << "Grau o vértice " << u <<  " = " << getGrau(this->predecessores, u) << '\n';
+    std::cout << "Grau o vértice " << v <<  " = " << getGrau(this->predecessores, v) << '\n';
+
+    std::cout << "Primeiro antecessor comum = " << BFSPrimeiroAncestralComum(this->predecessores, u, v) << '\n';
 
     delete[] cores;
     delete[] dist;
